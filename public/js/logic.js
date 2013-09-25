@@ -7,6 +7,7 @@
         return console.log(arg);
       });
     };
+    console.log(window.location_data);
     geocoder = new google.maps.Geocoder();
     Movie = Backbone.Model.extend({
       defaults: function() {
@@ -15,10 +16,8 @@
         };
       },
       parse: function(response) {
-        var self;
-        self = this;
-        if (!(response.locations == null)) {
-          cc("HAS LOCATION");
+        if (response.locations != null) {
+          console.count(typeof window.location_data[response.locations] !== "undefined");
         }
         return response;
       }
@@ -29,20 +28,35 @@
     });
     getLatLng = function(address) {
       return $.ajax({
-        url: "http://maps.googleapis.com/maps/api/geocode/json?&sensor=true&address=" + address,
+        url: "http://maps.googleapis.com/maps/api/geocode/json?&sensor=true&key=AIzaSyBoS1bfOyPBTbYH1GhtD4xRs9XrT17nGwg&address=" + address,
         type: "GET",
         dataType: 'json',
         success: function(json) {
+          var orig;
+          orig = json;
           json = json.results[0];
-          console.group(json.formatted_address);
-          console.log("Lat:" + json.geometry.location.lat);
-          console.log("Long:" + json.geometry.location.lng);
-          return console.groupEnd();
+          if (json != null) {
+            console.group(json.formatted_address);
+            console.log("Lat:" + json.geometry.location.lat);
+            console.log("Long:" + json.geometry.location.lng);
+            console.count("Address number");
+            console.groupEnd();
+            return jumptable[address] = {
+              lat: json.geometry.location.lat,
+              lng: json.geometry.location.lng
+            };
+          } else {
+            return cc(orig);
+          }
         }
       });
     };
-    getLatLng("38 Parkwood St Albany NY 12208");
-    return movies = new Movies(data);
+    movies = new Movies;
+    return movies.fetch({
+      success: function(coll) {
+        return cc(coll.length);
+      }
+    });
   });
 
 }).call(this);
