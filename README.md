@@ -10,3 +10,8 @@ I like to use preprocessors for my CSS, Coffeescript for my JS, and Jade for my 
 1. Coffee -> Javascript: public/src
 2. SCSS -> CSS: public/sass
 3. Jade -> HTML: views
+
+Problems
+=========
+
+How do I convert string addresses to lat/long reliably, without running constant calls to Google Maps geocoder (2500 per day maximum)? I decided to use MongoDB to store locations and their data - a hash table of lat long objects. Every time the page is loaded, the server sends back the table, and when each model parses its response, it will only geocode if its location is not in the table. This seems like a fair balance of caching and requesting to me - and I can't just store all of the results from SODATA in my db once and for all, because I don't know when it will update, how often it will update, or when.

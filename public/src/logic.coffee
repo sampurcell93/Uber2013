@@ -14,13 +14,15 @@ $ ->
             self = @
             unless !response.locations?
                 cc "HAS LOCATION"
-                geocoder.geocode 'address': response.locations, (results, status) ->
-                    if status == google.maps.GeocoderStatus.OK
-                        self.lat = results[0].geometry.location.lat()
-                        self.long = results[0].geometry.location.lng()
-                        cc self.lat, self.long
-                    else 
-                        cc status
+                    # if status == google.maps.GeocoderStatus.OK
+                    #     self.lat = results[0].geometry.location.lat()
+                    #     self.long = results[0].geometry.location.lng()
+                    #     console.group response.locations
+                    #     console.log self.lat
+                    #     console.log self.long
+                    #     console.groupEnd()
+                    # else 
+                    #     cc status
             response
 
 
@@ -29,9 +31,21 @@ $ ->
         url: 'http://data.sfgov.org/resource/yitu-d5am.json'
         model: Movie
 
-
+    # getter for formatted address, and latitude/longitude.
+    getLatLng = (address) ->
+        $.ajax
+            url: "http://maps.googleapis.com/maps/api/geocode/json?&sensor=true&address=" + address
+            type: "GET" 
+            dataType: 'json'
+            success: (json) ->
+                json = json.results[0]
+                console.group json.formatted_address
+                console.log "Lat:" + json.geometry.location.lat
+                console.log "Long:" + json.geometry.location.lng
+                console.groupEnd()         
+            
+    getLatLng "38 Parkwood St Albany NY 12208"
 
     movies = new Movies data
-    movies.fetch success: (coll) ->
+    # movies.fetch success: (coll) ->
         # cc coll.length
-
