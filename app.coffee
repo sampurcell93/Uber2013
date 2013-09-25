@@ -23,27 +23,37 @@ app.configure ->
 
 
 app.get "/", (req, res)->
-    # Since we don't want to query Google Geocode every time, I have compiled the coordinates of each point.
     db.locations.find {}, (err, found) ->
-        # We don't want to pass it as an array, however. To take advantage of O(1), we should
-        # pass it as a hash table.
-        hashtable = {}
-        # Linear
-        _.each found, (location) ->
-            hashtable[location.address] = location.loc
-        res.render "index", locations: JSON.stringify(hashtable)
+        res.render "index"
 
-# Post - whenever a new location is retrieved from google (because it was not already in the db)
-# Must pass in a string address, the latitude, and the longitude. Memory is cheap!
-app.post "/locations/:address/:lat/:lng", (req, res) ->
-    address = req.params.address
-    lat = req.params.lat
-    lng = req.params.lng
-    if !lat? or !lng? or !address? then res.json success: false
-    else db.locations.update {address: address}, {$set: {address: address, loc: {lat: lat, lng: lng}}}, 
-        {upsert: true}, (err, upd) ->
-            if err then res.json success: false
-            else res.json success: true
+app.post "/locations/", (req,res) ->
+    # Array of properties we want input - stop DB spamming
+    desired = ["locations", "actor_1", "coords", "actor_2", "actor_3", "director", "title", "fun_facts",
+                "producer", "lat", "lng", "production_company", "writer", "release_year"]
+    # Blank obj for insertion
+    sanitized = {}
+    # make sure request params are all desired
+    _.each req.body, (param, key) ->
+        if desired.indexOf(key) != -1
+            sanitized[key] = param
+    cc "posting"
+    db.locations.find({title: sanitized.title}, (err, found) ->
+        if found.length and sanitized.coords?
+            sanitized.coords = sanitized.coords.concat found[0].coords
+        if !sanitized.coords? and found.length
+            sanitized.coords = found.coords
+        cc sanitized.coords, sanitized.title
+        db.locations.update {title: sanitized.title}, {$set: sanitized}, {upsert: true}, (err, upd) ->
+            res.json success: true
+    )
+app.get "/movies", (req, res) ->
+    db.locations.find {}, (err, found) ->
+        if !err then res.json found
+        else res.json success: false
+
+
+app.put "/locations/:id", (req, res) ->
+
 
 app.use (req,res) ->
     res.render "404"

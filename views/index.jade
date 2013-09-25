@@ -18,12 +18,11 @@ html
             footer
                 p.center Site copyright Sam Purcell 2013
 
+        include templates
         script(type="text/javascript",src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBoS1bfOyPBTbYH1GhtD4xRs9XrT17nGwg&sensor=true")
         script(src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js", type='text/javascript')
         script(type='text/javascript', src='http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js')
         script(type='text/javascript', src='http://backbonejs.org/backbone-min.js')
-        script(type='text/javascript')
-            window.location_data = !{locations}
         script(type='text/javascript', src='../js/temp.js')
-        script(type='text/javascript', src='../js/logic.js')
         script(type='text/javascript', src='../js/map.js')
+        script(type='text/javascript', src='../js/logic.js')

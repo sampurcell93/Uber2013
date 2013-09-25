@@ -38,52 +38,57 @@
 
   app.get("/", function(req, res) {
     return db.locations.find({}, function(err, found) {
-      var hashtable;
-      hashtable = {};
-      _.each(found, function(location) {
-        return hashtable[location.address] = location.loc;
-      });
-      return res.render("index", {
-        locations: JSON.stringify(hashtable)
+      return res.render("index");
+    });
+  });
+
+  app.post("/locations/", function(req, res) {
+    var desired, sanitized;
+    desired = ["locations", "actor_1", "coords", "actor_2", "actor_3", "director", "title", "fun_facts", "producer", "lat", "lng", "production_company", "writer", "release_year"];
+    sanitized = {};
+    _.each(req.body, function(param, key) {
+      if (desired.indexOf(key) !== -1) {
+        return sanitized[key] = param;
+      }
+    });
+    cc("posting");
+    return db.locations.find({
+      title: sanitized.title
+    }, function(err, found) {
+      if (found.length && (sanitized.coords != null)) {
+        sanitized.coords = sanitized.coords.concat(found[0].coords);
+      }
+      if ((sanitized.coords == null) && found.length) {
+        sanitized.coords = found.coords;
+      }
+      cc(sanitized.coords, sanitized.title);
+      return db.locations.update({
+        title: sanitized.title
+      }, {
+        $set: sanitized
+      }, {
+        upsert: true
+      }, function(err, upd) {
+        return res.json({
+          success: true
+        });
       });
     });
   });
 
-  app.post("/locations/:address/:lat/:lng", function(req, res) {
-    var address, lat, lng;
-    address = req.params.address;
-    lat = req.params.lat;
-    lng = req.params.lng;
-    if ((lat == null) || (lng == null) || (address == null)) {
-      return res.json({
-        success: false
-      });
-    } else {
-      return db.locations.update({
-        address: address
-      }, {
-        $set: {
-          address: address,
-          loc: {
-            lat: lat,
-            lng: lng
-          }
-        }
-      }, {
-        upsert: true
-      }, function(err, upd) {
-        if (err) {
-          return res.json({
-            success: false
-          });
-        } else {
-          return res.json({
-            success: true
-          });
-        }
-      });
-    }
+  app.get("/movies", function(req, res) {
+    return db.locations.find({}, function(err, found) {
+      if (!err) {
+        return res.json(found);
+      } else {
+        return res.json({
+          success: false
+        });
+      }
+    });
   });
+
+  app.put("/locations/:id", function(req, res) {});
 
   app.use(function(req, res) {
     return res.render("404");
