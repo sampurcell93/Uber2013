@@ -1,0 +1,66 @@
+/* Welcome to Compass.
+ * In this file you should write your main styles. (or centralize your imports)
+ * Import this file using the following HTML or equivalent:
+ * <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css" /> */
+
+@import "compass/reset";
+@import "compass/css3";
+@import "build";
+@import "smartgrid";
+@import "nav";
+@import "compass/utilities/general/clearfix";
+
+* {
+    @include box-sizing(border-box);
+}
+
+body {
+    background: url(../images/curtains.jpg) fixed;
+    @include background-size(cover);
+    font-family: sans-serif;
+}
+
+.wrapper {
+    @include border-radius(3px);
+    @include box-shadow(0px 0px 40px black);
+    margin-top: 30px;
+    padding: 0;
+    background: $mainwhite;
+}
+
+header {
+    @include clearfix();
+    @include border-radius(3px 3px 0 0);
+    // needs latest Compass, add '@import "compass"' to your scss
+    background-color: rgb(174,188,191); // Old browsers
+    @include filter-gradient(#aebcbf, #0a0809, vertical); // IE6-9
+    @include background-image(linear-gradient(top,  rgba(174,188,191,1) 0%,rgba(110,119,116,1) 50%,rgba(10,14,10,1) 51%,rgba(10,8,9,1) 100%));
+
+    label {
+        padding: 10px;
+    }
+
+    input {
+        font-size: 1.2em;
+        border: 1px solid #111;
+        padding: 7px;
+        width: 100%;
+    }
+}
+
+input {
+    @include box-shadow(0px 0px 2px #444 inset);
+    @include border-radius(3px);
+//    @include transition(all 1.4s ease-in-out);
+
+    &:focus {
+        border-color: transparent;
+        outline: none;
+        @include box-shadow(0px 0px 7px $darkred);
+    }
+}
+
+.map-canvas {
+    height: 500px;
+    width: 100%;
+}
