@@ -3,11 +3,13 @@ html
     head
         title MovieFinder
         meta(name="viewport", content="initial-scale=1.0, user-scalable=no")
+        <link href='http://fonts.googleapis.com/css?family=Lato:300,400' rel='stylesheet' type='text/css'>
         link(rel='stylesheet', media='screen', rel='stylesheet', href='../icomoon/style.css')
         link(rel='stylesheet', media='screen', rel='stylesheet', href='../stylesheets/screen.css')
     body.active-modal
         .modal
-            p.center.p30 We're grabbing the data for movies that have been filmed in San Francisco! This might take a second.
+            p.center.p20 We're grabbing the data for movies that have been filmed in San Francisco! This might take a second.
+            img(src='../images/loader.gif', alt='loader')
         div.container.large.wrapper 
             header
                 nav.columns.four
@@ -19,7 +21,9 @@ html
                     i.icon-search
                     ul.auto-list
                 .clear
-            .map-canvas
+            .map-canvas.columns.nine
+            .columns.three.location-data
+                h1.center.p10 Start looking for Movies!
             //- footer
             //-     p.center Site copyright Sam Purcell 2013
 

@@ -57,14 +57,22 @@ $ ->
             matches
 
     window.MovieMarker = Backbone.View.extend
-        template: $("#movie-marker-template").html()
         initialize: ->
             _.bindAll @, "render"
             @mapObj = @options.mapObj
             self = @
-            @listenTo @model, "hide", ->
-                if self.marker? 
-                    self.marker.setMap null
+            @listenTo @model,
+                "hide": ->
+                    if self.marker? 
+                        self.marker.setMap null
+                "zoomto": ->
+                    cc "zoomto"
+                    if self.marker?
+                        map = self.mapObj.map
+                        map.setZoom 15
+                        map.panTo self.marker.position
+                        google.maps.event.trigger self.marker, 'click'
+
         render: ->
             # Either pass in an infowindow to bind events to
             # Make the google maps coordinate
@@ -81,10 +89,29 @@ $ ->
     window.MovieAutoItem = Backbone.View.extend
         template: $("#movie-auto-item").html()
         tagName: 'li'
+        initialize: ->
+            if @options.template then @template = @options.template
         render: ->
             @$el.html(_.template @template, @model.toJSON())
             @
+        events:
+            'click': (e)->
+                if @model.get("coords").last()
+                    @model.get("coords").last().trigger "zoomto"
 
+    window.FullMovieOrLocation = Backbone.View.extend
+        el: '.location-data'
+        loctemplate: $("#full-view-location").html()
+        # args: the template to be used, and the object to be templates
+        # rets this
+        render: (template, obj) ->
+            content = $("<div/>").html(_.template this[template], obj)
+            @$el.html(content)
+            @
+
+    window.FullViewer = new FullMovieOrLocation
     movies = new Movies
     movies.fetch success: (coll) ->
         window.map = new MovieMap collection: coll
+
+    console.log ""

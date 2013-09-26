@@ -1,5 +1,7 @@
 $mainwhite: #f9f9f9;
 $darkred: #AD0025;
+$lato:  'Lato', sans-serif;
+
 
 body {
     position: relative;
@@ -44,6 +46,13 @@ body {
         top: 14px;
         right: 30px;
         cursor: pointer;
+    }
+
+    img {
+        display:block;
+        width: 36px;
+        height: 36px;
+        margin: 20px auto;
     }
 }
 

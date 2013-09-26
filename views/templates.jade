@@ -1,9 +1,17 @@
-script(type='text/template')#movie-marker-template
+script(type='text/template')#full-view-location
     <% var u = "undefined"; %>
-    h2 <%= movies[0].title %>
-
+    h1 <%= location.title %>
+    <% _.each(movies, function(movie) { %>
+    h2.toggler <%= movie.title %>
+        span.small-year <%= " (" + movie.release_year + ")" %> 
+    | <%= typeof movie.fun_facts !== u ? "<p>" + movie.fun_facts + "</p>" : "" %>
+    p.actors <%= typeof movie.actor_1 !== u ? movie.actor_1 + ", " : "" %>
+        <%= typeof movie.actor_2 !== u ? movie.actor_2 + ", ": "" %>
+        <%= typeof movie.actor_3 !== u ? movie.actor_3 : "" %>
+    <% }) %>
 script(type='text/template')#concat
+    <% var u = "undefined"; %>
     <%= (typeof title !== u ?  title : "") + (typeof director !== u ? director : "") + (typeof producer !== u ? producer : "") + (typeof locations !== u ? locations : "") + (typeof writer !== u ? writer : "") %>
 
-script(type='text/template')#movie-auto-item
-    | YOOOO
+script(type='text/template')#movie-list-item
+    <%= title %>

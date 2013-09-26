@@ -59,15 +59,26 @@
       }
     });
     window.MovieMarker = Backbone.View.extend({
-      template: $("#movie-marker-template").html(),
       initialize: function() {
         var self;
         _.bindAll(this, "render");
         this.mapObj = this.options.mapObj;
         self = this;
-        return this.listenTo(this.model, "hide", function() {
-          if (self.marker != null) {
-            return self.marker.setMap(null);
+        return this.listenTo(this.model, {
+          "hide": function() {
+            if (self.marker != null) {
+              return self.marker.setMap(null);
+            }
+          },
+          "zoomto": function() {
+            var map;
+            cc("zoomto");
+            if (self.marker != null) {
+              map = self.mapObj.map;
+              map.setZoom(15);
+              map.panTo(self.marker.position);
+              return google.maps.event.trigger(self.marker, 'click');
+            }
           }
         });
       },
@@ -86,19 +97,43 @@
     window.MovieAutoItem = Backbone.View.extend({
       template: $("#movie-auto-item").html(),
       tagName: 'li',
+      initialize: function() {
+        if (this.options.template) {
+          return this.template = this.options.template;
+        }
+      },
       render: function() {
         this.$el.html(_.template(this.template, this.model.toJSON()));
         return this;
+      },
+      events: {
+        'click': function(e) {
+          if (this.model.get("coords").last()) {
+            return this.model.get("coords").last().trigger("zoomto");
+          }
+        }
       }
     });
+    window.FullMovieOrLocation = Backbone.View.extend({
+      el: '.location-data',
+      loctemplate: $("#full-view-location").html(),
+      render: function(template, obj) {
+        var content;
+        content = $("<div/>").html(_.template(this[template], obj));
+        this.$el.html(content);
+        return this;
+      }
+    });
+    window.FullViewer = new FullMovieOrLocation;
     movies = new Movies;
-    return movies.fetch({
+    movies.fetch({
       success: function(coll) {
         return window.map = new MovieMap({
           collection: coll
         });
       }
     });
+    return console.log("");
   });
 
 }).call(this);

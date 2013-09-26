@@ -23,11 +23,11 @@ $ ->
             @plotMarker @collection.at(0)
         # We render with a recursive function because it makes it easier to animate the dropping
         # If we use a loop, the markers sort of just appear.
-        plotMarker: (model) ->
-            index = 1 + model.collection.indexOf model
+        plotMarker: (movie) ->
+            index = 1 + movie.collection.indexOf movie
             self = @
             window.setTimeout ->
-                _.each model.get("coords").models, (location) ->
+                _.each movie.get("coords").models, (location) ->
                     # Check if the location has been plotted, and don't replot it if so.
                     if location.plotted is true then return true
                     view = new MovieMarker model: location, mapObj: self
@@ -37,23 +37,28 @@ $ ->
                     # Plot point
                     marker.setMap self.map
                     google.maps.event.addListener marker, "click", ->
-                      cc location.movies.toJSON()
-                      self.infowindow.setContent _.template(view.template, movies: location.movies.toJSON())
-                      self.infowindow.open self.map, @  
+                        # render the full viewer, using its location template and passing in all pertinent data
+                        cc movie
+                        FullViewer.render "loctemplate", {location: location.toJSON(), movies: location.movies.toJSON()}
+                        cc "done"
+
                     location.plotted = true
-                if self.collection.length/2 > index
+                if self.collection.length > index
                     self.plotMarker self.collection.at index
                 else 
                     $(document.body).removeClass().find(".modal").fadeOut("slow")
-             , 18
+             , 8
         getMatches: (e) ->
             $t = $ e.currentTarget
             query = $t.val()
             cc query
             matches = @collection.search query
+            $fill = $(".auto-list").empty()
             _.each matches, (match) ->
-                listItem = new window.MovieAutoItem model: match
-                $(".auto-list").html listItem.render().el
+                listItem = new window.MovieAutoItem model: match, template: $("#movie-list-item").html()
+                cc listItem.template
+                $fill.append listItem.render().el
+            e.stopPropagation()
         events: 
             'keyup .js-search': "getMatches"
             'keydown .js-search': "getMatches"

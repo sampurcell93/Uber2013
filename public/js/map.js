@@ -25,12 +25,12 @@
         self = this;
         return this.plotMarker(this.collection.at(0));
       },
-      plotMarker: function(model) {
+      plotMarker: function(movie) {
         var index, self;
-        index = 1 + model.collection.indexOf(model);
+        index = 1 + movie.collection.indexOf(movie);
         self = this;
         return window.setTimeout(function() {
-          _.each(model.get("coords").models, function(location) {
+          _.each(movie.get("coords").models, function(location) {
             var marker, view;
             if (location.plotted === true) {
               return true;
@@ -43,34 +43,39 @@
             self.collection.markers.push(marker);
             marker.setMap(self.map);
             google.maps.event.addListener(marker, "click", function() {
-              cc(location.movies.toJSON());
-              self.infowindow.setContent(_.template(view.template, {
+              cc(movie);
+              FullViewer.render("loctemplate", {
+                location: location.toJSON(),
                 movies: location.movies.toJSON()
-              }));
-              return self.infowindow.open(self.map, this);
+              });
+              return cc("done");
             });
             return location.plotted = true;
           });
-          if (self.collection.length / 2 > index) {
+          if (self.collection.length > index) {
             return self.plotMarker(self.collection.at(index));
           } else {
             return $(document.body).removeClass().find(".modal").fadeOut("slow");
           }
-        }, 18);
+        }, 8);
       },
       getMatches: function(e) {
-        var $t, matches, query;
+        var $fill, $t, matches, query;
         $t = $(e.currentTarget);
         query = $t.val();
         cc(query);
         matches = this.collection.search(query);
-        return _.each(matches, function(match) {
+        $fill = $(".auto-list").empty();
+        _.each(matches, function(match) {
           var listItem;
           listItem = new window.MovieAutoItem({
-            model: match
+            model: match,
+            template: $("#movie-list-item").html()
           });
-          return $(".auto-list").html(listItem.render().el);
+          cc(listItem.template);
+          return $fill.append(listItem.render().el);
         });
+        return e.stopPropagation();
       },
       events: {
         'keyup .js-search': "getMatches",
