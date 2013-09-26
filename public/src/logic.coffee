@@ -1,24 +1,43 @@
 $ ->
-
+    views = window.views
+    models = window.models
     # Set a hash table for easy filtering of locations
-    window.jumptable = {}
+    window.location_table = {}
+    # And one for easy filtering of movies
+    window.movie_table = {}
+    # Formatted arrays for locations and movies with typeahead
+    window.typeaheadmovies = []
+    window.typeaheadlocations = []
+    blueIcon = "../images/bluepoi.png"
+    redIcon = "../images/redpoi.png"
 
-    Location = Backbone.Model.extend
+    window.models.Location = Backbone.Model.extend
         url: "/locations"
         initialize: ->
             # Flag to ensure no points are plotted twice. 
             @plotted = false
             # reference to all the movies that the location was used for
             @movies = new Movies
+            loc = @toJSON()
+            value = loc.title
+            typeaheadlocations.push {value: value, tokens: [value]}
 
     Locations = Backbone.Collection.extend
         model: Location
 
     # The model for a single movie
-    Movie = Backbone.Model.extend
+    window.models.Movie = Backbone.Model.extend
         url: "/locations"
-        defaults: ->
-            locations: "Sorry, we don't have a location on record for this movie."
+        initialize: ->
+            @compressed = compressed = (_.template $("#concat").html(), @toJSON()).toLowerCase()
+            movie_table[compressed] = @
+            movie = @toJSON()
+            value = movie.title
+            tokens = [@compressed, movie.director, movie.producer, movie.writer, movie.title]
+            for i in [1..4]
+                if tokens[i]?
+                    tokens[i] = tokens[i].toLowerCase().split(" ").join("")
+            typeaheadmovies.push {value: value, tokens: tokens}
         # Parses the JSON returned from Mongo
         parse: (response) ->
             self = @
@@ -26,15 +45,15 @@ $ ->
             _.each response.coords, (coord) ->
                 if coord?
                     # If this location is nowhere in the hash table
-                    if typeof jumptable[coord.title] == "undefined"
+                    if typeof location_table[coord.title] == "undefined"
                         # add this new model
-                        locs.add loc = new Location(coord)
+                        locs.add loc = new models.Location(coord)
                         loc.movies.add self
                         # and add a ref in the table
-                        jumptable[coord.title] = loc
+                        location_table[coord.title] = loc
                     # otherwise, set a pointer
                     else 
-                        locs.add loc = jumptable[coord.title]
+                        locs.add loc = location_table[coord.title]
                         # Point the location to this movie - two way reference
                         loc.movies.add self
 
@@ -44,19 +63,14 @@ $ ->
     # Collection of movies, pulled from SODATA
     Movies = Backbone.Collection.extend
         url: '/movies/'
-        model: Movie
+        model: models.Movie
         initialize: ->
             @markers = []
+
         # args: a string query
         # rets: the list of movies whose properties match the string
-        search: (query) ->
-            self = @
-            matches = _.filter @models, (movie) ->
-                match_str = _.template $("#concat").html(), movie.toJSON()
-                match_str.indexOf(query) != -1 
-            matches
 
-    window.MovieMarker = Backbone.View.extend
+    window.views.LocationMarker = Backbone.View.extend
         initialize: ->
             _.bindAll @, "render"
             @mapObj = @options.mapObj
@@ -82,24 +96,42 @@ $ ->
                 position: pt
                 animation: google.maps.Animation.DROP
                 title: @model.get "title"
+                icon: redIcon
             )
             @model.marker = marker
             @
 
-    window.MovieAutoItem = Backbone.View.extend
-        template: $("#movie-auto-item").html()
-        tagName: 'li'
-        initialize: ->
-            if @options.template then @template = @options.template
-        render: ->
-            @$el.html(_.template @template, @model.toJSON())
-            @
+    window.views.AutoItem = Backbone.View.extend
         events:
             'click': (e)->
-                if @model.get("coords").last()
-                    @model.get("coords").last().trigger "zoomto"
+                cc @         
+                _.each movies.markers, (marker) ->
+                    unless marker.getIcon() is redIcon
+                        marker.setIcon(redIcon)
+                if @model instanceof models.Movie
+                    _.each @model.get("coords").models, (loc) ->
+                        if loc.marker? 
+                            cc "location at " + loc.get("title")
+                            loc.marker.setIcon(blueIcon)
+                else @model.trigger "zoomto"
+                e.stopPropagation()
+            'mouseover': (e) ->
+                # Unblue all other markers
+                # _.each movies.markers, (marker) ->
+                #     if marker.getIcon() == blueIcon
+                #         marker.setIcon(redIcon)
+                _.each @model.get("coords").models, (loc) ->
+                    if loc.marker? 
+                        loc.marker.setIcon(blueIcon)
+                e.stopPropagation()
+            'mouseout': (e) ->
+                #    # Unblue all markers
+                # _.each movies.markers, (marker) ->
+                #     if marker.getIcon() == blueIcon
+                #         marker.setIcon(redIcon)
+                # e.stopPropagation()
 
-    window.FullMovieOrLocation = Backbone.View.extend
+    window.views.FullMovieOrLocation = Backbone.View.extend
         el: '.location-data'
         loctemplate: $("#full-view-location").html()
         # args: the template to be used, and the object to be templates
@@ -107,11 +139,14 @@ $ ->
         render: (template, obj) ->
             content = $("<div/>").html(_.template this[template], obj)
             @$el.html(content)
+            cc content
             @
 
-    window.FullViewer = new FullMovieOrLocation
+    window.FullViewer = new views.FullMovieOrLocation
     movies = new Movies
     movies.fetch success: (coll) ->
         window.map = new MovieMap collection: coll
 
-    console.log ""
+    $(document).on "click", "h2", ->
+        $t = $ @
+        console.log $t.data("movie-name")

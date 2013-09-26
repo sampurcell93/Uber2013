@@ -40,6 +40,7 @@ header {
     label {
         padding: 10px;
         position: relative;
+//        border: 1px solid red;
     }
 
     input {
@@ -47,11 +48,12 @@ header {
         border: 1px solid #111;
         line-height: 35px;
         padding: 0 7px;
-        width: 90%;
+        width: 220% !important;
     }
 
+
     .icon-search { 
-        display: inline-block;
+        display: none;
         line-height: 35px;
         vertical-align: 1px;
         padding: 0 5px;
@@ -94,10 +96,10 @@ p {
     }
 }
 
-.auto-list {
+.tt-dropdown-menu {
     position: absolute;
     z-index: 999999;
-    width: 86.5%;
+    width: 220%;
     left: 11px;
     background: $mainwhite;
     background: rgba(255,255,255,.85);
@@ -105,17 +107,33 @@ p {
     overflow: auto;
     @include border-radius(0 0 3px 3px);
     @include box-shadow(0px 2px 6px #777);
+    padding-bottom: 10px;
 
-    li {
+    .tt-suggestion {
         line-height: 30px;
         text-indent: 20px;
+        font-size: 1.1em;
+        border-top: 1px solid #fff;
+        border-bottom: 1px solid #ccc;
         cursor: pointer;
         overflow: hidden;
         white-space: nowrap;
         text-overflow: ellipsis;
+        margin: 0 10px;
 
         &:hover {
-            background: $mainwhite;
+            text-decoration: underline;
+        }
+    }
+    h2 {    
+        background: #eee;
+        @include  box-shadow(0px 0px 2px inset #fff);
+        i {
+            padding: 0px 10px;
+            display: inline-block;
+            line-height: 30px;
+
+            &:before { padding-top: 3px; }
         }
     }
 }   

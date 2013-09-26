@@ -88,7 +88,27 @@
     });
   });
 
-  app.put("/locations/:id", function(req, res) {});
+  app.get("/movies/:query", function(req, res) {
+    var query;
+    return query = req.params.query;
+  });
+
+  app.get("/locations/:query", function(req, res) {
+    cc("locations");
+    return res.json([
+      {
+        success: true
+      }
+    ]);
+  });
+
+  app.put("/locations/:id", function(req, res) {
+    return res.json([
+      {
+        success: true
+      }
+    ]);
+  });
 
   app.use(function(req, res) {
     return res.render("404");

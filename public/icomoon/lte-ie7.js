@@ -10,7 +10,12 @@ window.onload = function() {
 			'icon-search' : '&#xf002;',
 			'icon-heart-empty' : '&#xf08a;',
 			'icon-star' : '&#xe000;',
-			'icon-github' : '&#xe001;'
+			'icon-github' : '&#xe001;',
+			'icon-compass' : '&#xe002;',
+			'icon-compass-2' : '&#xe003;',
+			'icon-star-2' : '&#xe004;',
+			'icon-film' : '&#xe005;',
+			'icon-monitor' : '&#xe006;'
 		},
 		els = document.getElementsByTagName('*'),
 		i, attr, c, el;

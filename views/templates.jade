@@ -13,5 +13,8 @@ script(type='text/template')#concat
     <% var u = "undefined"; %>
     <%= (typeof title !== u ?  title : "") + (typeof director !== u ? director : "") + (typeof producer !== u ? producer : "") + (typeof locations !== u ? locations : "") + (typeof writer !== u ? writer : "") %>
 
-script(type='text/template')#movie-list-item
-    <%= title %>
+script(type='text/template')#movie-auto-item
+    <span data-movie-name='<%= tokens[0] %>'><%= value %></spa.n
+
+script(type='text/template')#location-auto-item
+    <span data-location-name="<%= value %>"><%= value %></span>

@@ -51,8 +51,16 @@ app.get "/movies", (req, res) ->
         if !err then res.json found
         else res.json success: false
 
+app.get "/movies/:query", (req, res) ->
+    query = req.params.query
+
+app.get "/locations/:query", (req,res) ->
+    cc "locations"
+    res.json [success: true]
+
 
 app.put "/locations/:id", (req, res) ->
+    res.json [success: true]
 
 
 app.use (req,res) ->

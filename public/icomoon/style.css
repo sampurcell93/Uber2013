@@ -28,7 +28,7 @@ Instead of a list of all class selectors,
 you can use the generic selector below, but it's slower:
 [class*="icon-"] {
 */
-.icon-popout, .icon-search, .icon-heart-empty, .icon-star, .icon-github {
+.icon-popout, .icon-search, .icon-heart-empty, .icon-star, .icon-github, .icon-compass, .icon-compass-2, .icon-star-2, .icon-film, .icon-monitor {
 	font-family: 'icomoon';
 	speak: none;
 	font-style: normal;
@@ -52,4 +52,19 @@ you can use the generic selector below, but it's slower:
 }
 .icon-github:before {
 	content: "\e001";
+}
+.icon-compass:before {
+	content: "\e002";
+}
+.icon-compass-2:before {
+	content: "\e003";
+}
+.icon-star-2:before {
+	content: "\e004";
+}
+.icon-film:before {
+	content: "\e005";
+}
+.icon-monitor:before {
+	content: "\e006";
 }

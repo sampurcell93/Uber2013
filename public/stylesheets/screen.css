@@ -107,6 +107,7 @@ body.active-modal::after {
   background: #f9f9f9;
   background: rgba(255, 255, 255, 0.89);
   padding: 20px;
+  font-size: 1.1em;
   -webkit-box-shadow: 0px 0px 7px #111111;
   -moz-box-shadow: 0px 0px 7px #111111;
   box-shadow: 0px 0px 7px #111111;
@@ -116,14 +117,14 @@ body.active-modal::after {
   -o-border-radius: 4px;
   border-radius: 4px;
 }
-/* line 44, ../sass/_build.scss */
+/* line 45, ../sass/_build.scss */
 .modal .close-modal {
   position: absolute;
   top: 14px;
   right: 30px;
   cursor: pointer;
 }
-/* line 51, ../sass/_build.scss */
+/* line 52, ../sass/_build.scss */
 .modal img {
   display: block;
   width: 36px;
@@ -131,291 +132,291 @@ body.active-modal::after {
   margin: 20px auto;
 }
 
-/* line 59, ../sass/_build.scss */
+/* line 60, ../sass/_build.scss */
 .center {
   text-align: center;
 }
 
-/* line 60, ../sass/_build.scss */
+/* line 61, ../sass/_build.scss */
 .relative {
   position: relative;
   display: block;
 }
 
-/* line 61, ../sass/_build.scss */
+/* line 62, ../sass/_build.scss */
 .absolute {
   position: absolute;
 }
 
-/* line 62, ../sass/_build.scss */
+/* line 63, ../sass/_build.scss */
 .sticky {
   position: fixed !important;
 }
 
-/* line 63, ../sass/_build.scss */
+/* line 64, ../sass/_build.scss */
 .fr {
   float: right;
 }
 
-/* line 64, ../sass/_build.scss */
+/* line 65, ../sass/_build.scss */
 .fl {
   float: left;
 }
 
-/* line 65, ../sass/_build.scss */
+/* line 66, ../sass/_build.scss */
 .m0 {
   margin: 0;
 }
 
-/* line 66, ../sass/_build.scss */
+/* line 67, ../sass/_build.scss */
 .m10 {
   margin: 10px !important;
 }
 
-/* line 67, ../sass/_build.scss */
+/* line 68, ../sass/_build.scss */
 .m20 {
   margin: 20px !important;
 }
 
-/* line 68, ../sass/_build.scss */
+/* line 69, ../sass/_build.scss */
 .m30 {
   margin: 30px !important;
 }
 
-/* line 69, ../sass/_build.scss */
+/* line 70, ../sass/_build.scss */
 .s9 {
   font-size: .9em !important;
 }
 
-/* line 70, ../sass/_build.scss */
+/* line 71, ../sass/_build.scss */
 .s8 {
   font-size: .8em !important;
 }
 
-/* line 71, ../sass/_build.scss */
+/* line 72, ../sass/_build.scss */
 .s7 {
   font-size: .7em !important;
 }
 
-/* line 72, ../sass/_build.scss */
+/* line 73, ../sass/_build.scss */
 .s6 {
   font-size: .6em !important;
 }
 
-/* line 73, ../sass/_build.scss */
+/* line 74, ../sass/_build.scss */
 .s5 {
   font-size: .5em !important;
 }
 
-/* line 74, ../sass/_build.scss */
+/* line 75, ../sass/_build.scss */
 .s4 {
   font-size: .4em !important;
 }
 
-/* line 75, ../sass/_build.scss */
+/* line 76, ../sass/_build.scss */
 .s3 {
   font-size: .3em !important;
 }
 
-/* line 76, ../sass/_build.scss */
+/* line 77, ../sass/_build.scss */
 .s2 {
   font-size: .2em !important;
 }
 
-/* line 77, ../sass/_build.scss */
+/* line 78, ../sass/_build.scss */
 .s1 {
   font-size: .1em !important;
 }
 
-/* line 78, ../sass/_build.scss */
+/* line 79, ../sass/_build.scss */
 .ml-0 {
   margin-left: 0px !important;
 }
 
-/* line 79, ../sass/_build.scss */
+/* line 80, ../sass/_build.scss */
 .mt-40 {
   margin-top: 40px !important;
 }
 
-/* line 80, ../sass/_build.scss */
+/* line 81, ../sass/_build.scss */
 .mauto {
   margin-left: auto !important;
   margin-right: auto !important;
 }
 
-/* line 81, ../sass/_build.scss */
+/* line 82, ../sass/_build.scss */
 .p0 {
   padding: 0 !important;
 }
 
-/* line 82, ../sass/_build.scss */
+/* line 83, ../sass/_build.scss */
 .p10 {
   padding: 10px !important;
 }
 
-/* line 83, ../sass/_build.scss */
+/* line 84, ../sass/_build.scss */
 .p15 {
   padding: 15px;
 }
 
-/* line 84, ../sass/_build.scss */
+/* line 85, ../sass/_build.scss */
 .p30 {
   padding: 30px !important;
 }
 
-/* line 85, ../sass/_build.scss */
+/* line 86, ../sass/_build.scss */
 .pointer {
   cursor: pointer;
 }
 
-/* line 86, ../sass/_build.scss */
+/* line 87, ../sass/_build.scss */
 .border-simple {
   border: 1px solid #ccc;
 }
 
-/* line 87, ../sass/_build.scss */
+/* line 88, ../sass/_build.scss */
 .no-show {
   filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
   opacity: 0;
 }
 
-/* line 88, ../sass/_build.scss */
+/* line 89, ../sass/_build.scss */
 .show {
   filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100);
   opacity: 1;
 }
 
-/* line 89, ../sass/_build.scss */
+/* line 90, ../sass/_build.scss */
 .noclick {
   pointer-events: none;
 }
 
-/* line 90, ../sass/_build.scss */
+/* line 91, ../sass/_build.scss */
 .inline {
   display: inline-block;
 }
 
-/* line 91, ../sass/_build.scss */
+/* line 92, ../sass/_build.scss */
 .block {
   display: block !important;
 }
 
-/* line 92, ../sass/_build.scss */
+/* line 93, ../sass/_build.scss */
 .hidden {
   display: none;
 }
 
-/* line 93, ../sass/_build.scss */
+/* line 94, ../sass/_build.scss */
 .visible {
   display: block;
 }
 
-/* line 94, ../sass/_build.scss */
+/* line 95, ../sass/_build.scss */
 .clear {
   clear: both;
 }
 
-/* line 95, ../sass/_build.scss */
+/* line 96, ../sass/_build.scss */
 .w1 {
   width: 10%;
 }
 
-/* line 96, ../sass/_build.scss */
+/* line 97, ../sass/_build.scss */
 .w15 {
   width: 15%;
 }
 
-/* line 97, ../sass/_build.scss */
+/* line 98, ../sass/_build.scss */
 .w2 {
   width: 20%;
 }
 
-/* line 98, ../sass/_build.scss */
+/* line 99, ../sass/_build.scss */
 .w25 {
   width: 25%;
 }
 
-/* line 99, ../sass/_build.scss */
+/* line 100, ../sass/_build.scss */
 .w3 {
   width: 30%;
 }
 
-/* line 100, ../sass/_build.scss */
+/* line 101, ../sass/_build.scss */
 .w35 {
   width: 35%;
 }
 
-/* line 101, ../sass/_build.scss */
+/* line 102, ../sass/_build.scss */
 .w4 {
   width: 40%;
 }
 
-/* line 102, ../sass/_build.scss */
+/* line 103, ../sass/_build.scss */
 .w45 {
   width: 45%;
 }
 
-/* line 103, ../sass/_build.scss */
+/* line 104, ../sass/_build.scss */
 .w5 {
   width: 50%;
 }
 
-/* line 104, ../sass/_build.scss */
+/* line 105, ../sass/_build.scss */
 .w55 {
   width: 55%;
 }
 
-/* line 105, ../sass/_build.scss */
+/* line 106, ../sass/_build.scss */
 .w6 {
   width: 60%;
 }
 
-/* line 106, ../sass/_build.scss */
+/* line 107, ../sass/_build.scss */
 .w65 {
   width: 65%;
 }
 
-/* line 107, ../sass/_build.scss */
+/* line 108, ../sass/_build.scss */
 .w7 {
   width: 70%;
 }
 
-/* line 108, ../sass/_build.scss */
+/* line 109, ../sass/_build.scss */
 .w75 {
   width: 75%;
 }
 
-/* line 109, ../sass/_build.scss */
+/* line 110, ../sass/_build.scss */
 .w8 {
   width: 80%;
 }
 
-/* line 110, ../sass/_build.scss */
+/* line 111, ../sass/_build.scss */
 .w85 {
   width: 85%;
 }
 
-/* line 111, ../sass/_build.scss */
+/* line 112, ../sass/_build.scss */
 .w9 {
   width: 90%;
 }
 
-/* line 112, ../sass/_build.scss */
+/* line 113, ../sass/_build.scss */
 .w95 {
   width: 94.5%;
 }
 
-/* line 113, ../sass/_build.scss */
+/* line 114, ../sass/_build.scss */
 .w10 {
   width: 100%;
 }
 
-/* line 114, ../sass/_build.scss */
+/* line 115, ../sass/_build.scss */
 .icon {
   font-family: 'icons';
 }
 
-/* line 115, ../sass/_build.scss */
+/* line 116, ../sass/_build.scss */
 .white {
   color: #fff;
 }
@@ -1538,17 +1539,17 @@ header label {
   padding: 10px;
   position: relative;
 }
-/* line 45, ../sass/screen.scss */
+/* line 46, ../sass/screen.scss */
 header input {
   font-size: 1.2em;
   border: 1px solid #111;
   line-height: 35px;
   padding: 0 7px;
-  width: 90%;
+  width: 220% !important;
 }
-/* line 53, ../sass/screen.scss */
+/* line 55, ../sass/screen.scss */
 header .icon-search {
-  display: inline-block;
+  display: none;
   line-height: 35px;
   vertical-align: 1px;
   padding: 0 5px;
@@ -1557,13 +1558,13 @@ header .icon-search {
   cursor: pointer;
   text-shadow: 0px -1px 0px black;
 }
-/* line 63, ../sass/screen.scss */
+/* line 65, ../sass/screen.scss */
 header .icon-search:hover {
   color: #fff;
   text-shadow: 0px -1px 1px #fff;
 }
 
-/* line 70, ../sass/screen.scss */
+/* line 72, ../sass/screen.scss */
 h1 {
   font-size: 1.8em;
   border-bottom: 1px solid #aaa;
@@ -1571,7 +1572,7 @@ h1 {
   margin: 0 0 10px;
 }
 
-/* line 77, ../sass/screen.scss */
+/* line 79, ../sass/screen.scss */
 h2 {
   font-size: 1.4em;
   margin: 15px 0 5px;
@@ -1579,26 +1580,26 @@ h2 {
   padding-bottom: 5px;
 }
 
-/* line 84, ../sass/screen.scss */
+/* line 86, ../sass/screen.scss */
 .small-year {
   font-size: .7em;
 }
 
-/* line 88, ../sass/screen.scss */
+/* line 90, ../sass/screen.scss */
 p {
   line-height: 1.6;
 }
-/* line 91, ../sass/screen.scss */
+/* line 93, ../sass/screen.scss */
 p.actors {
   color: #888;
   font-size: .88em;
 }
 
-/* line 97, ../sass/screen.scss */
-.auto-list {
+/* line 99, ../sass/screen.scss */
+.tt-dropdown-menu {
   position: absolute;
   z-index: 999999;
-  width: 86.5%;
+  width: 220%;
   left: 11px;
   background: #f9f9f9;
   background: rgba(255, 255, 255, 0.85);
@@ -1612,22 +1613,44 @@ p.actors {
   -webkit-box-shadow: 0px 2px 6px #777777;
   -moz-box-shadow: 0px 2px 6px #777777;
   box-shadow: 0px 2px 6px #777777;
+  padding-bottom: 10px;
 }
-/* line 109, ../sass/screen.scss */
-.auto-list li {
+/* line 112, ../sass/screen.scss */
+.tt-dropdown-menu .tt-suggestion {
   line-height: 30px;
   text-indent: 20px;
+  font-size: 1.1em;
+  border-top: 1px solid #fff;
+  border-bottom: 1px solid #ccc;
   cursor: pointer;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+  margin: 0 10px;
 }
-/* line 117, ../sass/screen.scss */
-.auto-list li:hover {
-  background: #f9f9f9;
+/* line 124, ../sass/screen.scss */
+.tt-dropdown-menu .tt-suggestion:hover {
+  text-decoration: underline;
+}
+/* line 128, ../sass/screen.scss */
+.tt-dropdown-menu h2 {
+  background: #eee;
+  -webkit-box-shadow: 0px 0px 2px inset white;
+  -moz-box-shadow: 0px 0px 2px inset white;
+  box-shadow: 0px 0px 2px inset white;
+}
+/* line 131, ../sass/screen.scss */
+.tt-dropdown-menu h2 i {
+  padding: 0px 10px;
+  display: inline-block;
+  line-height: 30px;
+}
+/* line 136, ../sass/screen.scss */
+.tt-dropdown-menu h2 i:before {
+  padding-top: 3px;
 }
 
-/* line 123, ../sass/screen.scss */
+/* line 141, ../sass/screen.scss */
 input {
   -webkit-box-shadow: 0px 0px 2px #444444 inset;
   -moz-box-shadow: 0px 0px 2px #444444 inset;
@@ -1638,7 +1661,7 @@ input {
   -o-border-radius: 3px;
   border-radius: 3px;
 }
-/* line 128, ../sass/screen.scss */
+/* line 146, ../sass/screen.scss */
 input:focus {
   border-color: transparent;
   outline: none;
@@ -1647,7 +1670,7 @@ input:focus {
   box-shadow: 0px 0px 7px #ad0025;
 }
 
-/* line 135, ../sass/screen.scss */
+/* line 153, ../sass/screen.scss */
 .map-canvas {
   height: 600px;
   -webkit-border-radius: 0 0 3px 3px;
@@ -1660,13 +1683,13 @@ input:focus {
   box-shadow: 2px 0px 6px #777777;
   margin: 0;
 }
-/* line 141, ../sass/screen.scss */
+/* line 159, ../sass/screen.scss */
 .map-canvas h2 {
   font-size: 1.4em;
   text-align: center;
 }
 
-/* line 147, ../sass/screen.scss */
+/* line 165, ../sass/screen.scss */
 .location-data {
   padding-top: 15px;
   padding-bottom: 15px;
