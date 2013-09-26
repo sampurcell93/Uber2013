@@ -3,8 +3,11 @@ html
     head
         title MovieFinder
         meta(name="viewport", content="initial-scale=1.0, user-scalable=no")
+        link(rel='stylesheet', media='screen', rel='stylesheet', href='../icomoon/style.css')
         link(rel='stylesheet', media='screen', rel='stylesheet', href='../stylesheets/screen.css')
-    body
+    body.active-modal
+        .modal
+            p.center.p30 We're grabbing the data for movies that have been filmed in San Francisco! This might take a second.
         div.container.large.wrapper 
             header
                 nav.columns.four
@@ -14,15 +17,16 @@ html
                 label.columns.six
                     input(type='text', placeholder='Search for people, movie titles, and locations.').js-search
                     i.icon-search
+                    ul.auto-list
+                .clear
             .map-canvas
-            footer
-                p.center Site copyright Sam Purcell 2013
+            //- footer
+            //-     p.center Site copyright Sam Purcell 2013
 
         include templates
         script(type="text/javascript",src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBoS1bfOyPBTbYH1GhtD4xRs9XrT17nGwg&sensor=true")
         script(src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js", type='text/javascript')
         script(type='text/javascript', src='http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js')
         script(type='text/javascript', src='http://backbonejs.org/backbone-min.js')
-        script(type='text/javascript', src='../js/temp.js')
         script(type='text/javascript', src='../js/map.js')
         script(type='text/javascript', src='../js/logic.js')

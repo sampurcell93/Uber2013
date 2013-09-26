@@ -1,6 +1,13 @@
 $ ->
 
+        # Quick debugger, saves maaaaad keystrokes!
+   window.cc = ->
+        _.each arguments , (arg) ->
+            console.log arg
+
+
     window.MovieMap = Backbone.View.extend
+        el: '.wrapper'
         initialize: ->
             @infowindow = new google.maps.InfoWindow()
             @mapOptions = 
@@ -13,17 +20,45 @@ $ ->
             @
         render: ->
             self = @
-            _.each @collection.models, (movie) ->
-                _.each movie.get("coords").models, (location) ->
-                    marker = new MovieMarker({model: location, mapObj: self}).render()
+            @plotMarker @collection.at(0)
+        # We render with a recursive function because it makes it easier to animate the dropping
+        # If we use a loop, the markers sort of just appear.
+        plotMarker: (model) ->
+            index = 1 + model.collection.indexOf model
+            self = @
+            window.setTimeout ->
+                _.each model.get("coords").models, (location) ->
+                    # Check if the location has been plotted, and don't replot it if so.
+                    if location.plotted is true then return true
+                    view = new MovieMarker model: location, mapObj: self
+                    marker = view.render().marker
                     # Save a central reference to the marker
                     self.collection.markers.push marker
                     # Plot point
                     marker.setMap self.map
                     google.maps.event.addListener marker, "click", ->
-                      self.infowindow.setContent location.get "title"
-                      self.infowindow.open self.map, @
-             
+                      cc location.movies.toJSON()
+                      self.infowindow.setContent _.template(view.template, movies: location.movies.toJSON())
+                      self.infowindow.open self.map, @  
+                    location.plotted = true
+                if self.collection.length/2 > index
+                    self.plotMarker self.collection.at index
+                else 
+                    $(document.body).removeClass().find(".modal").fadeOut("slow")
+             , 18
+        getMatches: (e) ->
+            $t = $ e.currentTarget
+            query = $t.val()
+            cc query
+            matches = @collection.search query
+            _.each matches, (match) ->
+                listItem = new window.MovieAutoItem model: match
+                $(".auto-list").html listItem.render().el
+        events: 
+            'keyup .js-search': "getMatches"
+            'keydown .js-search': "getMatches"
+            'click .icon-search': (e) ->
+                e.preventDefault()
 
 
      # callLoc = (model) ->

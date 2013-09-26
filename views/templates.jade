@@ -1,2 +1,9 @@
 script(type='text/template')#movie-marker-template
-    Hey there
+    <% var u = "undefined"; %>
+    h2 <%= movies[0].title %>
+
+script(type='text/template')#concat
+    <%= (typeof title !== u ?  title : "") + (typeof director !== u ? director : "") + (typeof producer !== u ? producer : "") + (typeof locations !== u ? locations : "") + (typeof writer !== u ? writer : "") %>
+
+script(type='text/template')#movie-auto-item
+    | YOOOO
