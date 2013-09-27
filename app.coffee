@@ -5,7 +5,7 @@ port = process.env.PORT || 6060
 ObjectID = require('mongodb').ObjectID
 app.listen port, ->
     console.log "now listening on port " + port
-MONGO_URI = process.env.MONGOLAB_URI || process.env.MONGOHQ_URL || "Uber2013"
+MONGO_URI = process.env.MONGOHQ_URL || "Uber2013"
 db = require("mongojs").connect(MONGO_URI,['locations', "movies", "testing"]);
 cc = ->
     _.each arguments , (arg) ->
