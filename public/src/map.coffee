@@ -2,18 +2,15 @@ $ ->
 
     window.models = {}
     window.views = {}
-        # Quick debugger, saves maaaaad keystrokes!
-   window.cc = ->
+    window.blueIcon = "../images/bluepoi.png"
+    window.redIcon = "../images/redpoi.png"
+
+    # Quick debugger, saves maaaaad keystrokes!
+    window.cc = ->
         _.each arguments , (arg) ->
             console.log arg
 
-    Number.prototype.alphaNumeric = ->
-        key = @valueOf()
-        (key >= 48 && key <= 57) || (key >= 65 && key <= 90) || (key >= 97 && key <= 122)
-            
-
-
-    window.MovieMap = Backbone.View.extend
+    window.views.MovieMap = Backbone.View.extend
         el: '.wrapper'
         initialize: ->
             @infowindow = new google.maps.InfoWindow()
@@ -23,44 +20,18 @@ $ ->
               mapTypeId: google.maps.MapTypeId.ROADMAP
             @map = new google.maps.Map(document.getElementsByClassName("map-canvas")[0],@mapOptions);
             _.bindAll @, "render"
-            @render()
-            Underscore = 
-                compile: (template) ->
-                    compiled = _.template(template)
-                    render: (context) -> 
-                        compiled(context)
-
-            @$(".js-search").typeahead([
-                {
-                    name: 'movies'
-                    local: typeaheadmovies
-                    header: '<h2><i class="icon-film"></i> Movies:</h2>'
-                    template: $("#movie-auto-item").html()
-                    engine: Underscore
-                    limit: 15
-                },
-                {
-                    name: 'locations'
-                    local: typeaheadlocations
-                    header: '<h2><i class="icon-compass-2"></i> Locations:</h2>'
-                    template: $("#location-auto-item").html()
-                    engine: Underscore
-                    limit: 15
-                }
-                ])
             @
+        unSelect: ->
+            cc @
+            _.each @collection.markers, (marker) ->
+                unless marker.getIcon() is redIcon
+                    marker.setIcon(redIcon)
         render: ->
             self = @
-            # Ideally, we would run this function usingth location table directly, but as per ECMA spec,
+            # Ideally, we would run this function using a hash table directly, but as per ECMA spec,
             # Object keys are unordered, and so I don't see a way to do this recursively.
-            @plotMarker @collection.at(0)
-        # We render with a recursive function because it makes it easier to animate the dropping
-        # If we use a loop, the markers sort of just appear. This is just a usability choice.
-        plotMarker: (movie) ->
-            index = 1 + movie.collection.indexOf movie
-            self = @
-            window.setTimeout ->
-                _.each movie.get("coords").models, (location) ->
+            _.each @collection.models, (movie) ->
+                 _.each movie.coords.models, (location) ->
                     # Check if the location has been plotted, and don't replot it if so.
                     if location.plotted is true then return true
                     view = new views.LocationMarker model: location, mapObj: self
@@ -70,52 +41,63 @@ $ ->
                     # Plot point
                     marker.setMap self.map
                     google.maps.event.addListener marker, "click", ->
-                        # render the full viewer, using its location template and passing in all pertinent data
-                        cc movie
-                        FullViewer.render "loctemplate", {location: location.toJSON(), movies: location.movies.toJSON()}
-                        cc "done"
+                        window.app.navigate "/locations/" + location.get("_id"), true
 
                     location.plotted = true
-                if self.collection.length > index
-                    self.plotMarker self.collection.at index
-                else 
-                    $(document.body).removeClass().find(".modal").fadeOut("slow")
-             , 8
-        getMatches: (e) ->
-            # key = e.keyCode || e.which
-            # $t = $ e.currentTarget
-            # query = $t.val()
-            # matches = null
-            # if key.alphaNumeric() is true or key is 46 || key is 8
-            #     matches = @search query
-            # $fill = $(".auto-list").empty()
-            # for i in [0..matches.locations.length]
-            #     loc = matches.locations[i]
-            #     movie = matches.movies[i]
-            #     if movie?
-            #         listItem = new window.MovieAutoItem model: movie, template: $("#movie-list-item").html()
-            #     # if loc?
-            #     #     listItem = new window.MovieAutoItem model: loc, template: $("#movie-list-item").html()
-            #     $fill.append listItem.render().el
-            # e.stopPropagation()
-        search: (query) ->
-            query = query.toLowerCase()
-            self = @
-            cc movie_table
-            moviematches = _.filter movie_table, (movie, key) ->
-                key.indexOf(query) != -1
-            locmatches = _.filter location_table, (loc, address) ->
-                address.indexOf(query) != -1
-            movies: moviematches, locations: locmatches
-
+            $(document.body).removeClass().find(".modal").fadeOut("slow")
+            window.app = new WorkArea
+            Backbone.history.start pushBack: true
+            @bindAutoFill()
+        bindAutoFill: ->
+            Underscore = 
+                compile: (template) ->
+                    compiled = _.template(template)
+                    render: (context) -> 
+                        compiled(context)
+            $(".js-search").typeahead([
+                {
+                    name: 'movies'
+                    local: window.movies.models
+                    header: '<h2><i class="icon-film"></i> Movies:</h2>'
+                    template: $("#movie-auto-item").html()
+                    engine: Underscore
+                    limit: 15
+                },
+                {
+                    name: 'locations'
+                    local: window.locations.models
+                    header: '<h2><i class="icon-compass-2"></i> Locations:</h2>'
+                    template: $("#location-auto-item").html()
+                    engine: Underscore
+                    limit: 15
+                }
+                ])
         events: 
-            'keyup .js-search': "getMatches"
-            'click .icon-search': (e) ->
-                e.preventDefault()
+            "click .new-movies": ->
+                movies = _.each @collection.models, (model) ->
+                    year = model.get("release_year")
+                    if year > 2003 and year < new Date().getFullYear()
+                        _.each model.coords.models, (loc) ->
+                            cc " a location"
+                            loc.trigger "select"
 
-
-    WorkArea = Backbone.Router.extend()
-
-    Backbone.history.start()
-    window.app = new WorkArea
+     WorkArea = Backbone.Router.extend
+        routes: 
+            'movies/:id': "movie"
+            'locations/:id': 'location'
+        movie: (id) ->
+            if !window.movies? then return
+            model = window.movies.findWhere _id : id
+            item = model.toJSON()
+            item.coords = model.coords
+            FullViewer.render "movtemplate", item
+            window.map.unSelect()
+            _.each model.coords.models, (loc) ->
+                if loc.marker? 
+                    loc.marker.setIcon(blueIcon)
+            
+        location: (id)->
+            model = window.locations.findWhere _id: id
+            FullViewer.render "loctemplate", {location: model.toJSON(), movies: model.movies.toJSON()}
+            model.trigger "zoomto"
 

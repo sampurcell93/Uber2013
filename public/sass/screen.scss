@@ -15,7 +15,7 @@
 }
 
 body {
-    background: url(../images/curtains.jpg) fixed;
+    background: url(../images/sf.jpg) fixed;
     @include background-size(cover);
     font-family: $lato;
     color: #333;
@@ -23,19 +23,13 @@ body {
 
 .wrapper {
     @include border-radius(3px);
-    @include clearfix();
-    @include box-shadow(0px 0px 40px black);
-    background: rgba(255,255,255,.86);
+//    @include box-shadow(0px 0px 10px #666);
     margin-top: 30px;
     padding: 0;
 }
 
 header {
-    @include border-radius(3px 3px 0 0);
-    // needs latest Compass, add '@import "compass"' to your scss
-    background-color: rgb(174,188,191); // Old browsers
-    @include filter-gradient(#aebcbf, #0a0809, vertical); // IE6-9
-    @include background-image(linear-gradient(top,  rgba(174,188,191,1) 0%,rgba(110,119,116,1) 50%,rgba(10,14,10,1) 51%,rgba(10,8,9,1) 100%));
+    background: rgba(255,255,255,.81);
 
     label {
         padding: 10px;
@@ -45,10 +39,20 @@ header {
 
     input {
         font-size: 1.2em;
-        border: 1px solid #111;
-        line-height: 35px;
+        border: 1px solid transparent;
+        background: $mainwhite;
+        background: rgba(255,255,255,.81);
+        line-height: 38px;
         padding: 0 7px;
-        width: 220% !important;
+        outline: none;
+        width: 320% !important;
+        @include box-shadow(0px 0px 2px #444 inset);
+        @include border-radius(2px);
+
+        &:focus {
+            outline: none;
+            border-color: #ccc;
+        }
     }
 
 
@@ -96,18 +100,24 @@ p {
     }
 }
 
+a:hover { color: $mainhover; }
+
 .tt-dropdown-menu {
     position: absolute;
     z-index: 999999;
-    width: 220%;
+    width: 320%;
     left: 11px;
     background: $mainwhite;
     background: rgba(255,255,255,.85);
-    max-height: 300px;
-    overflow: auto;
+    max-height: 500px;
     @include border-radius(0 0 3px 3px);
     @include box-shadow(0px 2px 6px #777);
     padding-bottom: 10px;
+
+    .tt-suggestions {
+        max-height:180px;
+        overflow: auto;   
+    }
 
     .tt-suggestion {
         line-height: 30px;
@@ -121,40 +131,72 @@ p {
         text-overflow: ellipsis;
         margin: 0 10px;
 
+        &:first-of-type {
+            border-top: none;
+        }
+        &:last-of-type {
+            border-bottom: none;
+        }
+
+        a {
+            color: #222 !important;
+            text-decoration: none !important;
+            display: block;
+        }
+
         &:hover {
             text-decoration: underline;
         }
     }
     h2 {    
         background: #eee;
+        border-top: 1px solid #ccc;
         @include  box-shadow(0px 0px 2px inset #fff);
         i {
             padding: 0px 10px;
             display: inline-block;
             line-height: 30px;
 
-            &:before { padding-top: 3px; }
+            &:before { 
+                vertical-align: -2px; }
         }
     }
 }   
 
-input {
-    @include box-shadow(0px 0px 2px #444 inset);
-    @include border-radius(3px);
-//    @include transition(all 1.4s ease-in-out);
+.pertinent-list {
+    li {
+//        border-top: 1px solid #eee;
+//        border-bottom: 1px solid #D1C6C6;
 
-    &:focus {
-        border-color: transparent;
-        outline: none;
-        @include box-shadow(0px 0px 7px $darkred);
-    }
+        &:first-of-type {
+            border-top: none;
+        }
+        &:last-of-type {
+            border-bottom: none;
+        }
+        a {
+            color: #333;
+            text-decoration: none;
+            padding: 4px;
+            display: block;
+
+            &:hover {
+                text-decoration: underline;
+            }
+        }
+    }   
 }
 
-.map-canvas {
-    height: 600px;
+.map-wrapper {
+    padding: 17px 0px;
+}
+.map-corners {
     @include border-radius( 0 0 3px 3px);
-    @include box-shadow(2px 0px 6px #777);
-    margin: 0;
+    overflow: hidden;
+    @include box-shadow(0px 0px 18px #444);
+}
+.map-canvas {
+    height: 583px;
 
     h2 {
         font-size: 1.4em;
@@ -163,11 +205,31 @@ input {
 }
 
 .location-data {
-    padding-top: 15px;
-    padding-bottom: 15px;
+    padding: 15px 0 15px 14px;
     height: 600px;
     float: right !important;
     padding-right: 20px;
     overflow: auto;
     text-shadow: 0px 1px 0px #ddd;
+    background: rgba(255,255,255,.81);
+    position: relative;
+
+    .actions-list {
+        position: absolute;
+        bottom: 0;
+        background: $mainwhite;
+        left: -10px;
+        right: -10px;
+        display:block;
+
+        li {
+            padding: 4px 3px;
+            text-align: center;
+            
+        }
+    
+        li:before {
+            padding: 0 5px;
+        }
+    }
 }

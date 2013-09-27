@@ -14,14 +14,14 @@ html
             header
                 nav.columns.four
                     ul
-                        li Favorites
-                        li New Movies
+                        li.favorites Favorites
+                        li.new-movies New Movies
                 label.columns.six
                     input(type='text', placeholder='Search for movies, people, and locations.').js-search
-                    i.icon-search
-                    ul.auto-list
                 .clear
-            .map-canvas.columns.nine
+            .columns.nine.map-wrapper
+                .map-corners
+                    .map-canvas
             .columns.three.location-data
                 h1.center.p10 Start looking for Movies!
             //- footer

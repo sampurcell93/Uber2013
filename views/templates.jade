@@ -1,20 +1,37 @@
 script(type='text/template')#full-view-location
     <% var u = "undefined"; %>
     h1 <%= location.title %>
-    <% _.each(movies, function(movie) { %>
-    h2.toggler <%= movie.title %>
-        span.small-year <%= " (" + movie.release_year + ")" %> 
-    | <%= typeof movie.fun_facts !== u ? "<p>" + movie.fun_facts + "</p>" : "" %>
-    p.actors <%= typeof movie.actor_1 !== u ? movie.actor_1 + ", " : "" %>
-        <%= typeof movie.actor_2 !== u ? movie.actor_2 + ", ": "" %>
-        <%= typeof movie.actor_3 !== u ? movie.actor_3 : "" %>
-    <% }) %>
+    <%= typeof location.fun_facts !== u ? "<p>" + location.fun_facts + "</p>" : "" %>
+    h2 Movies:
+    ul.pertinent-list
+        <% _.each(movies, function(movie) { %>
+        li <a href='#movies/<%= movie._id %>'><%= movie.title %>
+            span.small-year <%= " (" + movie.release_year + ")" %> </a>
+        <% }) %>
+
+script(type='text/template')#full-view-movie
+    <%     String.prototype.sanitize = function() { return this.replace(/"/g, "").replace(/'/g, ""); }; %>
+    <% var u = "undefined"; %>
+    h1 <%= title %>
+        span.small-year <%= " (" + release_year + ")" %> </a>
+    p.actors Starring: <%= typeof actor_1 !== u ? actor_1 + ", " : "" %>
+        <%= typeof actor_2 !== u ? actor_2 + ", ": "" %>
+        <%= typeof actor_3 !== u ? actor_3 : "" %>
+    h2 Locations:
+    ul.pertinent-list
+        <% _.each(coords.models, function(loc) { %>
+        li <a  href='#locations/<%= loc.get("_id").sanitize() %>'><%= loc.get("title") %></a>
+        <% }) %>
+    <ul class='actions-list' data-id='<%= _id %>'>
+    li.add-favorite-movie.icon-heart-empty Favorite
+
 script(type='text/template')#concat
     <% var u = "undefined"; %>
     <%= (typeof title !== u ?  title : "") + (typeof director !== u ? director : "") + (typeof producer !== u ? producer : "") + (typeof locations !== u ? locations : "") + (typeof writer !== u ? writer : "") %>
 
 script(type='text/template')#movie-auto-item
-    <span data-movie-name='<%= tokens[0] %>'><%= value %></spa.n
+    <% console.log(tokens) %>
+    <a href='#movies/<%= tokens[0] %>'><%= value %></a> 
 
 script(type='text/template')#location-auto-item
-    <span data-location-name="<%= value %>"><%= value %></span>
+    <a href='#locations/<%= tokens[0] %>'><%= value %></a>

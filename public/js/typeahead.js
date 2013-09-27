@@ -719,28 +719,27 @@
                 this._getSuggestions().removeClass("tt-is-under-cursor");
                 $suggestion.addClass("tt-is-under-cursor");
             },
-            _makeBackbone: function(el) {
-                var id = null, table = null
-                if (typeof el.data("movie-name") !== "undefined"){
-                    id = el.data("movie-name")
-                    table = window.movie_table
-                }
-                else {
-                    id = el.data("location-name")
-                    table = window.location_table
-                }
-                return view = new window.views["AutoItem"]({model: table[id]})
-            },
+            // _makeBackbone: function(el) {
+            //     var id = null, table = null
+            //     if (typeof el.data("movie-id") !== "undefined"){
+            //         id = el.data("movie-id")
+            //         table = window.movie_table
+            //     }
+            //     else {
+            //         id = el.data("location-id")
+            //         table = window.location_table
+            //     }
+            //     return view = new window.views["AutoItem"]({model: table[id]})
+            // },
             _handleSelection: function($e) {
                 var $suggestion = $($e.currentTarget);
-                $linker = $suggestion.find("span");
-                if ($suggestion.data("linked") != true)
-                    var view = this._makeBackbone($linker);
-                    view.el = $suggestion
-                    view.$el = $suggestion
-                    view.delegateEvents()
-                    view.$el.trigger("click")
-                    $suggestion.data("linked", true)
+                // $linker = $suggestion.find("span");
+                // var view = this._makeBackbone($linker);
+                // view.el = $suggestion
+                // view.$el = $suggestion
+                // view.delegateEvents()
+                // view.$el.trigger("select")
+                // $suggestion.data("linked", true)
                 this.trigger("suggestionSelected", extractSuggestion($suggestion));
             },
             _show: function() {
