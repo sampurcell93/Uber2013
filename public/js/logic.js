@@ -4,16 +4,16 @@
     var Locations, Movies, models, views;
     views = window.views;
     models = window.models;
-    window.location_table = {};
-    window.typeaheadlocations = [];
     String.prototype.sanitize = function() {
       return this.replace(/"/g, "").replace(/'/g, "");
     };
     window.models.Location = Backbone.Model.extend({
-      url: "/locations",
+      url: function() {
+        return "/locations/" + this.get("_id");
+      },
+      idAttribute: '_id',
       initialize: function() {
         var loc, value;
-        this.plotted = false;
         this.movies = new Movies;
         loc = this.toJSON();
         this.value = value = loc.title;
@@ -25,13 +25,15 @@
       model: models.Location
     });
     window.models.Movie = Backbone.Model.extend({
-      url: "/locations/",
+      url: function() {
+        return "/movies/" + this.get("_id");
+      },
       idAttribute: '_id',
       initialize: function() {
         var movie;
         movie = this.toJSON();
         this.value = movie.title;
-        return this.tokens = [movie._id, movie.director, movie.producer, movie.writer, movie.title];
+        return this.tokens = [movie._id, movie.director, movie.producer, movie.writer, movie.title, movie.actor_1, movie.actor_2, movie.actor_3];
       },
       parse: function(response) {
         var links, self;
@@ -39,9 +41,7 @@
         links = new Locations;
         _.each(response.locations, function(id) {
           var link;
-          link = locations.findWhere({
-            _id: id
-          });
+          link = locations._byId[id];
           if (link != null) {
             link.movies.add(self);
             return links.add(link);
@@ -53,10 +53,7 @@
     });
     Movies = Backbone.Collection.extend({
       url: '/movies/',
-      model: models.Movie,
-      initialize: function() {
-        return this.markers = [];
-      }
+      model: models.Movie
     });
     window.views.LocationMarker = Backbone.View.extend({
       initialize: function() {
@@ -73,17 +70,20 @@
           "zoomto": function() {
             var map;
             if (self.marker != null) {
-              cc("marker exists");
-              self.mapObj.unSelect();
               map = self.mapObj.map;
               map.panTo(self.marker.position);
               self.marker.setIcon(blueIcon);
+              return self.marker.setMap(self.mapObj.map);
+            }
+          },
+          "click": function() {
+            if (self.marker != null) {
               return google.maps.event.trigger(self.marker, 'click');
             }
           },
           "select": function() {
             if (self.marker != null) {
-              cc(blueIcon);
+              self.marker.setMap(window.map.map);
               return self.marker.setIcon(blueIcon);
             }
           }
@@ -106,11 +106,11 @@
       el: '.location-data',
       loctemplate: $("#full-view-location").html(),
       movtemplate: $("#full-view-movie").html(),
+      favtemplate: $("#faves-template").html(),
       render: function(template, obj) {
         var content;
         content = $("<div/>").html(_.template(this[template], obj));
         this.$el.html(content);
-        cc(content);
         return this;
       }
     });
@@ -120,13 +120,9 @@
     window.map = new views.MovieMap;
     return locations.fetch({
       success: function(locs) {
-        _.each(locs.models, function(loc) {
-          loc = loc.toJSON();
-          return console.log(loc);
-        });
+        window.map.collection = locs;
         return movies.fetch({
-          success: function(movs) {
-            window.map.collection = movs;
+          success: function() {
             return window.map.render();
           }
         });

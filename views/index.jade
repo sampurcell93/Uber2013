@@ -3,7 +3,8 @@ html
     head
         title MovieFinder
         meta(name="viewport", content="initial-scale=1.0, user-scalable=no")
-        <link href='http://fonts.googleapis.com/css?family=Lato:300,400' rel='stylesheet' type='text/css'>
+        <meta charset="utf-8">
+        <link href='http://fonts.googleapis.com/css?family=Lato:400,700' rel='stylesheet' type='text/css'>
         link(rel='stylesheet', media='screen', rel='stylesheet', href='../icomoon/style.css')
         link(rel='stylesheet', media='screen', rel='stylesheet', href='../stylesheets/screen.css')
     body.active-modal
@@ -14,24 +15,24 @@ html
             header
                 nav.columns.four
                     ul
-                        li.favorites Favorites
+                        li
+                            a(href='#favorites') Favorites
                         li.new-movies New Movies
                 label.columns.six
                     input(type='text', placeholder='Search for movies, people, and locations.').js-search
+                span.js-show-all-points.columns.two Show all points
                 .clear
             .columns.nine.map-wrapper
                 .map-corners
                     .map-canvas
-            .columns.three.location-data
-                h1.center.p10 Start looking for Movies!
-            //- footer
-            //-     p.center Site copyright Sam Purcell 2013
+            .columns.three
+                .location-data
+                    h1.center.p10 Start looking for Movies!
 
         include templates
         script(type="text/javascript",src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBoS1bfOyPBTbYH1GhtD4xRs9XrT17nGwg&sensor=true")
         script(src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js", type='text/javascript')
-        script(type='text/javascript', src='../js/typeahead.js')
         script(type='text/javascript', src='http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js')
         script(type='text/javascript', src='http://backbonejs.org/backbone-min.js')
-        script(type='text/javascript', src='../js/map.js')
-        script(type='text/javascript', src='../js/logic.js')
+        script(type='text/javascript', src='../js/typeahead.min.js')
+        script(type='text/javascript', src='../js/final.min.js')

@@ -5,11 +5,7 @@ $ ->
     window.blueIcon = "../images/bluepoi.png"
     window.redIcon = "../images/redpoi.png"
 
-    # Quick debugger, saves maaaaad keystrokes!
-    window.cc = ->
-        _.each arguments , (arg) ->
-            console.log arg
-
+    # The overall application controller.
     window.views.MovieMap = Backbone.View.extend
         el: '.wrapper'
         initialize: ->
@@ -20,34 +16,33 @@ $ ->
               mapTypeId: google.maps.MapTypeId.ROADMAP
             @map = new google.maps.Map(document.getElementsByClassName("map-canvas")[0],@mapOptions);
             _.bindAll @, "render"
+            @markers = []
             @
         unSelect: ->
-            cc @
-            _.each @collection.markers, (marker) ->
-                unless marker.getIcon() is redIcon
-                    marker.setIcon(redIcon)
+            _.each @markers, (marker) ->
+                marker.setMap null
+            @
+        unBlue: ->
+            _.each @markers, (marker) ->
+                marker.setIcon redIcon
+            @
         render: ->
             self = @
-            # Ideally, we would run this function using a hash table directly, but as per ECMA spec,
-            # Object keys are unordered, and so I don't see a way to do this recursively.
-            _.each @collection.models, (movie) ->
-                 _.each movie.coords.models, (location) ->
-                    # Check if the location has been plotted, and don't replot it if so.
-                    if location.plotted is true then return true
-                    view = new views.LocationMarker model: location, mapObj: self
-                    marker = view.render().marker
-                    # Save a central reference to the marker
-                    self.collection.markers.push marker
-                    # Plot point
-                    marker.setMap self.map
-                    google.maps.event.addListener marker, "click", ->
-                        window.app.navigate "/locations/" + location.get("_id"), true
+            _.each @collection.models, (location) ->
+                view = new views.LocationMarker model: location, mapObj: self
+                marker = view.render().marker
+                # Save a central reference to the marker
+                self.markers.push marker
+                # Plot point
+                marker.setMap self.map
+                google.maps.event.addListener marker, "click", ->
+                    window.app.navigate "/locations/" + location.get("_id"), true
 
-                    location.plotted = true
             $(document.body).removeClass().find(".modal").fadeOut("slow")
             window.app = new WorkArea
             Backbone.history.start pushBack: true
             @bindAutoFill()
+            @
         bindAutoFill: ->
             Underscore = 
                 compile: (template) ->
@@ -72,32 +67,59 @@ $ ->
                     limit: 15
                 }
                 ])
+            @
         events: 
             "click .new-movies": ->
                 movies = _.each @collection.models, (model) ->
                     year = model.get("release_year")
                     if year > 2003 and year < new Date().getFullYear()
                         _.each model.coords.models, (loc) ->
-                            cc " a location"
                             loc.trigger "select"
+            "click .fav": (e) ->
+                $t = $ e.currentTarget
+                type = $t.data("type")
+                id = $t.data("id")
+                if $t.hasClass("icon-star")
+                    $t.removeClass("icon-star").addClass("icon-star-2").text("Unfavorite")
+                else if $t.hasClass("icon-star-2")
+                    $t.removeClass("icon-star-2").addClass("icon-star").text("Favorite")
+                model = window[type]._byId[id]
+                model.set "favorite", !model.get("favorite")
+                model.save()
+                e.stopPropagation()
+                e.stopimmediatePropagation()
+                e.preventDefault()
+            "click .js-show-all-points": ->
+                _.each @markers, (marker) ->
+                    if marker.getMap() is null
+                        marker.setMap window.map.map
 
      WorkArea = Backbone.Router.extend
         routes: 
             'movies/:id': "movie"
             'locations/:id': 'location'
+            'favorites': () ->
+                locs = _.filter window.locations.models, (loc) ->
+                    typeof loc.get("favorite") isnt "undefined" and loc.get("favorite") is true
+                movs = _.filter window.movies.models, (mov) ->
+                    typeof mov.get("favorite") isnt "undefined" and mov.get("favorite") is true
+                FullViewer.render "favtemplate", { locations: locs, movies: movs }
         movie: (id) ->
             if !window.movies? then return
-            model = window.movies.findWhere _id : id
+            model = window.movies._byId[id]
             item = model.toJSON()
             item.coords = model.coords
             FullViewer.render "movtemplate", item
-            window.map.unSelect()
+            window.map.unSelect().map.setZoom 12
             _.each model.coords.models, (loc) ->
                 if loc.marker? 
-                    loc.marker.setIcon(blueIcon)
-            
+                    loc.marker.setMap window.map.map
+                    loc.marker.setIcon redIcon
+            if model.coords.last()?
+                model.coords.last().trigger "zoomto"
         location: (id)->
-            model = window.locations.findWhere _id: id
+            model = window.locations._byId[id]
             FullViewer.render "loctemplate", {location: model.toJSON(), movies: model.movies.toJSON()}
+            window.map.unBlue()
             model.trigger "zoomto"
-
+            model.trigger "click"

@@ -45,7 +45,7 @@ header {
         line-height: 38px;
         padding: 0 7px;
         outline: none;
-        width: 320% !important;
+        width: 100%;
         @include box-shadow(0px 0px 2px #444 inset);
         @include border-radius(2px);
 
@@ -83,7 +83,7 @@ h1 {
 h2 {
     font-size: 1.4em;
     margin: 15px 0 5px;
-    border-bottom: 1px solid #ccc;
+    border-bottom: 1px solid #bbb;
     padding-bottom: 5px;
 }
 
@@ -102,17 +102,26 @@ p {
 
 a:hover { color: $mainhover; }
 
+.twitter-typeahead {
+    width: 100%; 
+}
+
+.js-show-all-points {
+    cursor: pointer;
+    line-height: 60px;
+}
+
 .tt-dropdown-menu {
     position: absolute;
     z-index: 999999;
-    width: 320%;
     left: 11px;
     background: $mainwhite;
     background: rgba(255,255,255,.85);
     max-height: 500px;
     @include border-radius(0 0 3px 3px);
     @include box-shadow(0px 2px 6px #777);
-    padding-bottom: 10px;
+    padding-bottom: 30px;
+    width: 100%;
 
     .tt-suggestions {
         max-height:180px;
@@ -141,17 +150,31 @@ a:hover { color: $mainhover; }
         a {
             color: #222 !important;
             text-decoration: none !important;
-            display: block;
+            display: inline-block;
+            width: 80%;
         }
 
         &:hover {
             text-decoration: underline;
         }
+
+        i {
+            position: relative;
+            top: 5px;
+            border: 1px solid red;
+            right: 10px;
+
+            &:hover { color: red; }
+
+        }
     }
     h2 {    
         background: #eee;
+        margin-top: 0;
+        margin-bottom: 0;
         border-top: 1px solid #ccc;
         @include  box-shadow(0px 0px 2px inset #fff);
+
         i {
             padding: 0px 10px;
             display: inline-block;
@@ -164,16 +187,21 @@ a:hover { color: $mainhover; }
 }   
 
 .pertinent-list {
-    li {
-//        border-top: 1px solid #eee;
-//        border-bottom: 1px solid #D1C6C6;
 
-        &:first-of-type {
-            border-top: none;
+    &.people { 
+        color: #555;
+
+        li {
+            line-height: 1.4;
+            border-bottom: 1px solid #bbb;
         }
-        &:last-of-type {
-            border-bottom: none;
-        }
+    }
+
+    li {
+
+        border-bottom: 1px solid #bbb;
+        border-top: 1px solid #eee;
+
         a {
             color: #333;
             text-decoration: none;
@@ -184,6 +212,12 @@ a:hover { color: $mainhover; }
                 text-decoration: underline;
             }
         }
+
+        &:hover {
+            background: rgba(255,255,255,.3) ;
+        }
+        &:first-of-type { border-top: none;}
+        &:last-of-type { border-bottom: none;}
     }   
 }
 
@@ -209,27 +243,48 @@ a:hover { color: $mainhover; }
     height: 600px;
     float: right !important;
     padding-right: 20px;
+    left: 20px;
     overflow: auto;
     text-shadow: 0px 1px 0px #ddd;
     background: rgba(255,255,255,.81);
     position: relative;
+    width: 100%;
 
-    .actions-list {
-        position: absolute;
-        bottom: 0;
-        background: $mainwhite;
-        left: -10px;
-        right: -10px;
+    .button {
+        margin-top: -13px;
         display:block;
-
-        li {
-            padding: 4px 3px;
-            text-align: center;
-            
+        float: right;
+        font-size: .9em;
+        color: #444;
+        text-decoration: none;
+        
+        &.icon-star-2 {
+            border-color: #6FC462;
         }
-    
-        li:before {
-            padding: 0 5px;
+
+        &.icon-star-2:before {
+            color: #6FC462;
+        }
+
+        &:before {
+            padding: 0 5px 0 2px;
+        }
+
+        &:hover {
+            background: #fff;
+        }
+
+        &:active {
+            background: #eee;
         }
     }
+}
+
+.button {
+        @include border-radius(3px);
+        background: $mainwhite; 
+        border: 1px solid #bbb;
+        position: relative;
+        cursor: pointer;
+        padding: 5px 7px;
 }

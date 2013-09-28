@@ -1471,36 +1471,19 @@ nav {
 }
 /* line 6, ../sass/_nav.scss */
 nav ul {
-  -webkit-border-radius: 3px 3px 0 3px;
-  -moz-border-radius: 3px 3px 0 3px;
-  -ms-border-radius: 3px 3px 0 3px;
-  -o-border-radius: 3px 3px 0 3px;
-  border-radius: 3px 3px 0 3px;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  -ms-border-radius: 3px;
+  -o-border-radius: 3px;
+  border-radius: 3px;
   -webkit-box-shadow: inset 0px 0px 1px 0px white;
   -moz-box-shadow: inset 0px 0px 1px 0px white;
   box-shadow: inset 0px 0px 1px 0px white;
   background: rgba(255, 255, 255, 0.8);
   text-shadow: 0px 1px 0px #fff;
   position: relative;
-  right: -20px;
+  right: 10px;
   border: 1px solid #bbb;
-}
-/* line 15, ../sass/_nav.scss */
-nav ul:after {
-  -webkit-transform: rotate(-45deg);
-  -moz-transform: rotate(-45deg);
-  -ms-transform: rotate(-45deg);
-  -o-transform: rotate(-45deg);
-  transform: rotate(-45deg);
-  content: "";
-  position: absolute;
-  top: 33px;
-  right: 5px;
-  height: 0;
-  width: 0;
-  display: block;
-  border: 14px solid transparent;
-  border-bottom-color: #888;
 }
 /* line 29, ../sass/_nav.scss */
 nav ul li {
@@ -1565,7 +1548,7 @@ header input {
   line-height: 38px;
   padding: 0 7px;
   outline: none;
-  width: 320% !important;
+  width: 100%;
   -webkit-box-shadow: 0px 0px 2px #444444 inset;
   -moz-box-shadow: 0px 0px 2px #444444 inset;
   box-shadow: 0px 0px 2px #444444 inset;
@@ -1609,7 +1592,7 @@ h1 {
 h2 {
   font-size: 1.4em;
   margin: 15px 0 5px;
-  border-bottom: 1px solid #ccc;
+  border-bottom: 1px solid #bbb;
   padding-bottom: 5px;
 }
 
@@ -1634,10 +1617,20 @@ a:hover {
 }
 
 /* line 105, ../sass/screen.scss */
+.twitter-typeahead {
+  width: 100%;
+}
+
+/* line 109, ../sass/screen.scss */
+.js-show-all-points {
+  cursor: pointer;
+  line-height: 60px;
+}
+
+/* line 114, ../sass/screen.scss */
 .tt-dropdown-menu {
   position: absolute;
   z-index: 999999;
-  width: 320%;
   left: 11px;
   background: #f9f9f9;
   background: rgba(255, 255, 255, 0.85);
@@ -1650,14 +1643,15 @@ a:hover {
   -webkit-box-shadow: 0px 2px 6px #777777;
   -moz-box-shadow: 0px 2px 6px #777777;
   box-shadow: 0px 2px 6px #777777;
-  padding-bottom: 10px;
+  padding-bottom: 30px;
+  width: 100%;
 }
-/* line 117, ../sass/screen.scss */
+/* line 126, ../sass/screen.scss */
 .tt-dropdown-menu .tt-suggestions {
   max-height: 180px;
   overflow: auto;
 }
-/* line 122, ../sass/screen.scss */
+/* line 131, ../sass/screen.scss */
 .tt-dropdown-menu .tt-suggestion {
   line-height: 30px;
   text-indent: 20px;
@@ -1670,69 +1664,101 @@ a:hover {
   text-overflow: ellipsis;
   margin: 0 10px;
 }
-/* line 134, ../sass/screen.scss */
+/* line 143, ../sass/screen.scss */
 .tt-dropdown-menu .tt-suggestion:first-of-type {
   border-top: none;
 }
-/* line 137, ../sass/screen.scss */
+/* line 146, ../sass/screen.scss */
 .tt-dropdown-menu .tt-suggestion:last-of-type {
   border-bottom: none;
 }
-/* line 141, ../sass/screen.scss */
+/* line 150, ../sass/screen.scss */
 .tt-dropdown-menu .tt-suggestion a {
   color: #222 !important;
   text-decoration: none !important;
-  display: block;
+  display: inline-block;
+  width: 80%;
 }
-/* line 147, ../sass/screen.scss */
+/* line 157, ../sass/screen.scss */
 .tt-dropdown-menu .tt-suggestion:hover {
   text-decoration: underline;
 }
-/* line 151, ../sass/screen.scss */
+/* line 161, ../sass/screen.scss */
+.tt-dropdown-menu .tt-suggestion i {
+  position: relative;
+  top: 5px;
+  border: 1px solid red;
+  right: 10px;
+}
+/* line 167, ../sass/screen.scss */
+.tt-dropdown-menu .tt-suggestion i:hover {
+  color: red;
+}
+/* line 171, ../sass/screen.scss */
 .tt-dropdown-menu h2 {
   background: #eee;
+  margin-top: 0;
+  margin-bottom: 0;
   border-top: 1px solid #ccc;
   -webkit-box-shadow: 0px 0px 2px inset white;
   -moz-box-shadow: 0px 0px 2px inset white;
   box-shadow: 0px 0px 2px inset white;
 }
-/* line 155, ../sass/screen.scss */
+/* line 178, ../sass/screen.scss */
 .tt-dropdown-menu h2 i {
   padding: 0px 10px;
   display: inline-block;
   line-height: 30px;
 }
-/* line 160, ../sass/screen.scss */
+/* line 183, ../sass/screen.scss */
 .tt-dropdown-menu h2 i:before {
   vertical-align: -2px;
 }
 
-/* line 171, ../sass/screen.scss */
-.pertinent-list li:first-of-type {
-  border-top: none;
+/* line 191, ../sass/screen.scss */
+.pertinent-list.people {
+  color: #555;
 }
-/* line 174, ../sass/screen.scss */
-.pertinent-list li:last-of-type {
-  border-bottom: none;
+/* line 194, ../sass/screen.scss */
+.pertinent-list.people li {
+  line-height: 1.4;
+  border-bottom: 1px solid #bbb;
 }
-/* line 177, ../sass/screen.scss */
+/* line 200, ../sass/screen.scss */
+.pertinent-list li {
+  border-bottom: 1px solid #bbb;
+  border-top: 1px solid #eee;
+}
+/* line 205, ../sass/screen.scss */
 .pertinent-list li a {
   color: #333;
   text-decoration: none;
   padding: 4px;
   display: block;
 }
-/* line 183, ../sass/screen.scss */
+/* line 211, ../sass/screen.scss */
 .pertinent-list li a:hover {
   text-decoration: underline;
 }
+/* line 216, ../sass/screen.scss */
+.pertinent-list li:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+/* line 219, ../sass/screen.scss */
+.pertinent-list li:first-of-type {
+  border-top: none;
+}
+/* line 220, ../sass/screen.scss */
+.pertinent-list li:last-of-type {
+  border-bottom: none;
+}
 
-/* line 190, ../sass/screen.scss */
+/* line 224, ../sass/screen.scss */
 .map-wrapper {
   padding: 17px 0px;
 }
 
-/* line 193, ../sass/screen.scss */
+/* line 227, ../sass/screen.scss */
 .map-corners {
   -webkit-border-radius: 0 0 3px 3px;
   -moz-border-radius: 0 0 3px 3px;
@@ -1745,42 +1771,69 @@ a:hover {
   box-shadow: 0px 0px 18px #444444;
 }
 
-/* line 198, ../sass/screen.scss */
+/* line 232, ../sass/screen.scss */
 .map-canvas {
   height: 583px;
 }
-/* line 201, ../sass/screen.scss */
+/* line 235, ../sass/screen.scss */
 .map-canvas h2 {
   font-size: 1.4em;
   text-align: center;
 }
 
-/* line 207, ../sass/screen.scss */
+/* line 241, ../sass/screen.scss */
 .location-data {
   padding: 15px 0 15px 14px;
   height: 600px;
   float: right !important;
   padding-right: 20px;
+  left: 20px;
   overflow: auto;
   text-shadow: 0px 1px 0px #ddd;
   background: rgba(255, 255, 255, 0.81);
   position: relative;
+  width: 100%;
 }
-/* line 217, ../sass/screen.scss */
-.location-data .actions-list {
-  position: absolute;
-  bottom: 0;
-  background: #f9f9f9;
-  left: -10px;
-  right: -10px;
+/* line 253, ../sass/screen.scss */
+.location-data .button {
+  margin-top: -13px;
   display: block;
+  float: right;
+  font-size: .9em;
+  color: #444;
+  text-decoration: none;
 }
-/* line 225, ../sass/screen.scss */
-.location-data .actions-list li {
-  padding: 4px 3px;
-  text-align: center;
+/* line 261, ../sass/screen.scss */
+.location-data .button.icon-star-2 {
+  border-color: #6FC462;
 }
-/* line 231, ../sass/screen.scss */
-.location-data .actions-list li:before {
-  padding: 0 5px;
+/* line 265, ../sass/screen.scss */
+.location-data .button.icon-star-2:before {
+  color: #6FC462;
+}
+/* line 269, ../sass/screen.scss */
+.location-data .button:before {
+  padding: 0 5px 0 2px;
+}
+/* line 273, ../sass/screen.scss */
+.location-data .button:hover {
+  background: #fff;
+}
+/* line 277, ../sass/screen.scss */
+.location-data .button:active {
+  background: #eee;
+}
+
+/* line 283, ../sass/screen.scss */
+.button {
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  -ms-border-radius: 3px;
+  -o-border-radius: 3px;
+  border-radius: 3px;
+  background: #f9f9f9;
+  border: 1px solid #bbb;
+  position: relative;
+  cursor: pointer;
+  padding: 5px 7px;
 }

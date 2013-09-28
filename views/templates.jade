@@ -1,4 +1,9 @@
+
+//- Template for a full view of a location, including the movies filmed there
 script(type='text/template')#full-view-location
+    <% var fav = (location.favorite == true); %>
+    <a class='fav button icon-star<%= fav ? "-2" : ""%>' data-type='locations' data-id='<%= location._id %>'> <%= fav ? "Unfavorite" : "Favorite" %> </a>
+    .clear
     <% var u = "undefined"; %>
     h1 <%= location.title %>
     <%= typeof location.fun_facts !== u ? "<p>" + location.fun_facts + "</p>" : "" %>
@@ -9,29 +14,48 @@ script(type='text/template')#full-view-location
             span.small-year <%= " (" + movie.release_year + ")" %> </a>
         <% }) %>
 
+//-  Template for a full view of a movie, including all of the locations at which it was filmed
 script(type='text/template')#full-view-movie
+    <% var fav = (favorite == true) %>
+    <a class='fav button icon-star<%= fav ? "-2" : ""%>' data-type='movies' data-id='<%= _id %>'> <%= fav ? "Unfavorite" : "Favorite" %> </a>
+    .clear
     <%     String.prototype.sanitize = function() { return this.replace(/"/g, "").replace(/'/g, ""); }; %>
     <% var u = "undefined"; %>
     h1 <%= title %>
         span.small-year <%= " (" + release_year + ")" %> </a>
-    p.actors Starring: <%= typeof actor_1 !== u ? actor_1 + ", " : "" %>
-        <%= typeof actor_2 !== u ? actor_2 + ", ": "" %>
-        <%= typeof actor_3 !== u ? actor_3 : "" %>
+    ul.pertinent-list.people
+        li Starring: <%= typeof actor_1 !== u ? actor_1 + ", " : "" %>
+            <%= typeof actor_2 !== u ? actor_2 + ", ": "" %>
+            <%= typeof actor_3 !== u ? actor_3 : "" %>
+        li Director: <%= typeof director !== u ? director : "" %>
+        li Writer: <%= typeof writer !== u ? writer : "" %>
+        li A <%= typeof production_company !== u ? "<strong>" + production_company + "</strong>" : "" %> Production
     h2 Locations:
     ul.pertinent-list
         <% _.each(coords.models, function(loc) { %>
         li <a  href='#locations/<%= loc.get("_id").sanitize() %>'><%= loc.get("title") %></a>
         <% }) %>
     <ul class='actions-list' data-id='<%= _id %>'>
-    li.add-favorite-movie.icon-heart-empty Favorite
 
-script(type='text/template')#concat
-    <% var u = "undefined"; %>
-    <%= (typeof title !== u ?  title : "") + (typeof director !== u ? director : "") + (typeof producer !== u ? producer : "") + (typeof locations !== u ? locations : "") + (typeof writer !== u ? writer : "") %>
-
+//-  A template for displaying all location and movie favorites
+script(type='text/template')#faves-template
+    h2 Favorite Locations
+    ul.pertinent-list
+        <% _.each( locations, function (fav) { %>
+        li 
+            <a href='#locations<%= "/" + fav.get("_id").sanitize() %>'><%= fav.get("title") %></a>
+        <% }); %>
+    h2 Favorite Movies
+    ul.pertinent-list
+        <% _.each( movies, function (fav) { %>
+        li 
+            <a href='#movies<%= "/" + fav.get("_id").sanitize() %>'><%= fav.get("title") %></a>
+        <% }); %>
+//- The templates for each autocomplete item, using Backbone's routing API to function
 script(type='text/template')#movie-auto-item
-    <% console.log(tokens) %>
-    <a href='#movies/<%= tokens[0] %>'><%= value %></a> 
+    <a href='#movies/<%= tokens[0] %>'><%= value %></a>
+    //- <i class='fav icon-star fr' data-id='<%= tokens[0] %>' data-type='movies'></i>
 
 script(type='text/template')#location-auto-item
     <a href='#locations/<%= tokens[0] %>'><%= value %></a>
+    //- <i class='fav icon-star fr' data-id='<%= tokens[0] %>' data-type='locations'></i>
