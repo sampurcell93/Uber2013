@@ -1611,6 +1611,11 @@ p.actors {
   font-size: .88em;
 }
 
+/* line 102, ../sass/screen.scss */
+a {
+  color: #333;
+}
+
 /* line 103, ../sass/screen.scss */
 a:hover {
   color: #75bdd1;
