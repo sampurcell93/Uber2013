@@ -120,6 +120,11 @@
     window.map = new views.MovieMap;
     return locations.fetch({
       success: function(locs) {
+        _.each(locs.models, function(loc) {
+          loc = loc.toJSON();
+          console.log(loc.lat);
+          return console.log(loc.lng);
+        });
         window.map.collection = locs;
         return movies.fetch({
           success: function() {

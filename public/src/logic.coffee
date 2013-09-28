@@ -107,6 +107,10 @@ $ ->
 
     # fetch the locations, then the movies and link them
     locations.fetch success: (locs) ->
+        _.each locs.models, (loc) ->
+            loc = loc.toJSON()
+            console.log loc.lat
+            console.log loc.lng
         window.map.collection = locs
         movies.fetch success: ->
             window.map.render()
