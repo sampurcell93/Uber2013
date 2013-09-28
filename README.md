@@ -16,7 +16,7 @@ For autocomplete, I thought it best to get data on the client, for the simple re
 
 URL scheme: you can render a movie with #movies/:id, a location with the same pattern, or see your favorites with #favorites. I would really like to expand this application's RESTful API and add more features.
 
-PROBLEMS
+Problems
 ========
 While autocomplete does technically return movies whose constituents match the query (IE, "Nich" returns Bicentennial Man because Nicholas Kazan wrote it), it does so ambiguously, simply returning the movie with no explanation. A good feature in the future would be the refinement of the result. I can think of a way to do it within an underscore template using the string.indexOf() method, but I have no more time.
 
@@ -28,7 +28,7 @@ I obtained all of the coordinate data from google maps, using a throttling funct
 
 Credit for the image in the background goes to user rozne on wallbase.cc - source: http://wallpapers.wallbase.cc/rozne/wallpaper-1529749.jpg
 
-OTHER LINKS
+Other Links
 ===========
 My portfolio, resume, and github can be found at http://sampurcell.herokuapp.com. Please excuse any pageload delay, gotta wait for them dynos
  
