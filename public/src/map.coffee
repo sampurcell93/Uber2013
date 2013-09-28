@@ -12,7 +12,7 @@ $ ->
             @infowindow = new google.maps.InfoWindow()
             @mapOptions = 
               center: new google.maps.LatLng(37.7849300 , -122.4294200)
-              zoom: 13
+              zoom: 3
               mapTypeId: google.maps.MapTypeId.ROADMAP
             @map = new google.maps.Map(document.getElementsByClassName("map-canvas")[0],@mapOptions);
             _.bindAll @, "render"
@@ -29,14 +29,17 @@ $ ->
         render: ->
             self = @
             _.each @collection.models, (location) ->
-                view = new views.LocationMarker model: location, mapObj: self
-                marker = view.render().marker
-                # Save a central reference to the marker
-                self.markers.push marker
-                # Plot point
-                marker.setMap self.map
-                google.maps.event.addListener marker, "click", ->
-                    window.app.navigate "/locations/" + location.get("_id"), true
+                loc = location.toJSON()
+                # only plot points near SF - sometimes Google just cannot return good data.
+                unless loc.lng < -125  or loc.lng > -118 or loc.lat > 39 or loc.lat < 34
+                    view = new views.LocationMarker model: location, mapObj: self
+                    marker = view.render().marker
+                    # Save a central reference to the marker
+                    self.markers.push marker
+                    # Plot point
+                    marker.setMap self.map
+                    google.maps.event.addListener marker, "click", ->
+                        window.app.navigate "/locations/" + loc._id, true
 
             $(document.body).removeClass().find(".modal").fadeOut("slow")
             window.app = new WorkArea

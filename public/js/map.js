@@ -12,7 +12,7 @@
         this.infowindow = new google.maps.InfoWindow();
         this.mapOptions = {
           center: new google.maps.LatLng(37.7849300, -122.4294200),
-          zoom: 13,
+          zoom: 3,
           mapTypeId: google.maps.MapTypeId.ROADMAP
         };
         this.map = new google.maps.Map(document.getElementsByClassName("map-canvas")[0], this.mapOptions);
@@ -36,17 +36,20 @@
         var self;
         self = this;
         _.each(this.collection.models, function(location) {
-          var marker, view;
-          view = new views.LocationMarker({
-            model: location,
-            mapObj: self
-          });
-          marker = view.render().marker;
-          self.markers.push(marker);
-          marker.setMap(self.map);
-          return google.maps.event.addListener(marker, "click", function() {
-            return window.app.navigate("/locations/" + location.get("_id"), true);
-          });
+          var loc, marker, view;
+          loc = location.toJSON();
+          if (!(loc.lng < -125 || loc.lng > -118 || loc.lat > 39 || loc.lat < 34)) {
+            view = new views.LocationMarker({
+              model: location,
+              mapObj: self
+            });
+            marker = view.render().marker;
+            self.markers.push(marker);
+            marker.setMap(self.map);
+            return google.maps.event.addListener(marker, "click", function() {
+              return window.app.navigate("/locations/" + loc._id, true);
+            });
+          }
         });
         $(document.body).removeClass().find(".modal").fadeOut("slow");
         window.app = new WorkArea;

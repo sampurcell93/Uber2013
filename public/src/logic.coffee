@@ -104,13 +104,44 @@ $ ->
     window.movies = new Movies
     window.locations = new Locations
     window.map = new views.MovieMap
+    geocoder = new google.maps.Geocoder()  
+
+    parse = (current, addresses, id) ->
+        flag = false
+        _.each addresses, (addr, i) ->
+            if addr.formatted_address.toLowerCase().indexOf("san francisco") != -1
+                console.log "for " + current + " with id " + id + "we have a SF"
+                console.log "at lat " + addr.geometry.location.lat()
+                console.log "at lng " + addr.geometry.location.lng()
+                $.ajax 
+                    url: '/newlocs/' + id + "/" + addr.geometry.location.lat() + "/" + addr.geometry.location.lng()
+                    type: 'POST'
+                    dataType: 'json'
+                    success: (json) ->
+                        console.log json
+
+    find = (loc, index) ->
+        if !loc? then return
+        loc = loc.toJSON()
+        address = loc.title
+        if loc.lng < -125  or loc.lng > -118 or loc.lat > 39 or loc.lat < 34
+            window.setTimeout ->
+               geocoder.geocode(
+                  address: address
+                  , (results, status) ->
+                    if status is google.maps.GeocoderStatus.OK
+                        parse address, results, loc.title
+                    else 
+                        console.log status
+                    find window.locations.at(index + 1), index + 1
+                ) 
+            , 1000
+        else find window.locations.at(index + 1), index + 1
 
     # fetch the locations, then the movies and link them
     locations.fetch success: (locs) ->
-        _.each locs.models, (loc) ->
-            loc = loc.toJSON()
-            console.log loc.lat
-            console.log loc.lng
+        loc = locs.at(0)
+        # find loc, 0
         window.map.collection = locs
         movies.fetch success: ->
             window.map.render()

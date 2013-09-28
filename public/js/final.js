@@ -12,7 +12,7 @@
         this.infowindow = new google.maps.InfoWindow();
         this.mapOptions = {
           center: new google.maps.LatLng(37.7849300, -122.4294200),
-          zoom: 13,
+          zoom: 3,
           mapTypeId: google.maps.MapTypeId.ROADMAP
         };
         this.map = new google.maps.Map(document.getElementsByClassName("map-canvas")[0], this.mapOptions);
@@ -36,17 +36,20 @@
         var self;
         self = this;
         _.each(this.collection.models, function(location) {
-          var marker, view;
-          view = new views.LocationMarker({
-            model: location,
-            mapObj: self
-          });
-          marker = view.render().marker;
-          self.markers.push(marker);
-          marker.setMap(self.map);
-          return google.maps.event.addListener(marker, "click", function() {
-            return window.app.navigate("/locations/" + location.get("_id"), true);
-          });
+          var loc, marker, view;
+          loc = location.toJSON();
+          if (!(loc.lng < -125 || loc.lng > -118 || loc.lat > 39 || loc.lat < 34)) {
+            view = new views.LocationMarker({
+              model: location,
+              mapObj: self
+            });
+            marker = view.render().marker;
+            self.markers.push(marker);
+            marker.setMap(self.map);
+            return google.maps.event.addListener(marker, "click", function() {
+              return window.app.navigate("/locations/" + loc._id, true);
+            });
+          }
         });
         $(document.body).removeClass().find(".modal").fadeOut("slow");
         window.app = new WorkArea;
@@ -180,7 +183,7 @@
   });
 
   $(function() {
-    var Locations, Movies, models, views;
+    var Locations, Movies, find, geocoder, models, parse, views;
     views = window.views;
     models = window.models;
     String.prototype.sanitize = function() {
@@ -297,8 +300,54 @@
     window.movies = new Movies;
     window.locations = new Locations;
     window.map = new views.MovieMap;
+    geocoder = new google.maps.Geocoder();
+    parse = function(current, addresses, id) {
+      var flag;
+      flag = false;
+      return _.each(addresses, function(addr, i) {
+        if (addr.formatted_address.toLowerCase().indexOf("san francisco") !== -1) {
+          console.log("for " + current + " with id " + id + "we have a SF");
+          console.log("at lat " + addr.geometry.location.lat());
+          console.log("at lng " + addr.geometry.location.lng());
+          return $.ajax({
+            url: '/newlocs/' + id + "/" + addr.geometry.location.lat() + "/" + addr.geometry.location.lng(),
+            type: 'POST',
+            dataType: 'json',
+            success: function(json) {
+              return console.log(json);
+            }
+          });
+        }
+      });
+    };
+    find = function(loc, index) {
+      var address;
+      if (loc == null) {
+        return;
+      }
+      loc = loc.toJSON();
+      address = loc.title;
+      if (loc.lng < -125 || loc.lng > -118 || loc.lat > 39 || loc.lat < 34) {
+        return window.setTimeout(function() {
+          return geocoder.geocode({
+            address: address
+          }, function(results, status) {
+            if (status === google.maps.GeocoderStatus.OK) {
+              parse(address, results, loc.title);
+            } else {
+              console.log(status);
+            }
+            return find(window.locations.at(index + 1), index + 1);
+          });
+        }, 1000);
+      } else {
+        return find(window.locations.at(index + 1), index + 1);
+      }
+    };
     return locations.fetch({
       success: function(locs) {
+        var loc;
+        loc = locs.at(0);
         window.map.collection = locs;
         return movies.fetch({
           success: function() {
