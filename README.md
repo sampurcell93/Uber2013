@@ -6,6 +6,8 @@ The biggest engineering decision I felt I had to make here was how to store the 
 
 I reasoned that because the last update to this data set was in February of 2013, there was no need to pull from the API every time the page was loaded - the data is relatively static. A feature in the future could be a backend "cron" type job to check for updates to the data set, or a button on the interface to check for updates.
 
+I called the movies and the locations using fetch for two reasons. First, I wanted to show ya'll that I know how to make AJAX calls. In this case, I could have passed the data from the server directly, but I thought I'd just use the native model.parse() function from the server. Another cool "feature" of this approach is that we can give users a real sense of what's going on. The modal that loads and shows you that data is being pulled is, in my opinion, always nice to see. I didn't have time to implement it, but I would really like to change the loader from a straight infinite loop to an actual progresss bar - not really hard using the HTML5 <progress> element, and since we know the length of the location collection, we could make it really useful.
+
 Architecture / Data Structures
 ==============================
 I am storing my data in two collections (tables). The first is a table of movies, each with a title, director, etc. The most important part, however, is the array of ids. This is a big reason why I am now regretting my decision to use mongo - I want to relate each movie to its locations. However, it's not so bad - Backbone.js comes to the rescue with the collection's _byId table, which allows me to link movies to their locations, and vice versa in O(1). 
