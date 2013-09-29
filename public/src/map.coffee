@@ -73,11 +73,12 @@ $ ->
             @
         events: 
             "click .new-movies": ->
-                movies = _.each @collection.models, (model) ->
+                _.each window.movies.models, (model) ->
                     year = model.get("release_year")
                     if year > 2003 and year < new Date().getFullYear()
-                        _.each model.coords.models, (loc) ->
-                            loc.trigger "select"
+                        _.each model.get("locations"), (loc) ->
+                            if window.locations._byId[loc]?
+                                window.locations._byId[loc].trigger "select"
             "click .fav": (e) ->
                 $t = $ e.currentTarget
                 type = $t.data("type")

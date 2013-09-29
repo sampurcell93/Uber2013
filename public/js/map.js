@@ -93,13 +93,14 @@
       },
       events: {
         "click .new-movies": function() {
-          var movies;
-          return movies = _.each(this.collection.models, function(model) {
+          return _.each(window.movies.models, function(model) {
             var year;
             year = model.get("release_year");
             if (year > 2003 && year < new Date().getFullYear()) {
-              return _.each(model.coords.models, function(loc) {
-                return loc.trigger("select");
+              return _.each(model.get("locations"), function(loc) {
+                if (window.locations._byId[loc] != null) {
+                  return window.locations._byId[loc].trigger("select");
+                }
               });
             }
           });
