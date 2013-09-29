@@ -93,13 +93,14 @@
       },
       events: {
         "click .new-movies": function() {
-          var movies;
-          return movies = _.each(this.collection.models, function(model) {
+          return _.each(window.movies.models, function(model) {
             var year;
             year = model.get("release_year");
             if (year > 2003 && year < new Date().getFullYear()) {
-              return _.each(model.coords.models, function(loc) {
-                return loc.trigger("select");
+              return _.each(model.get("locations"), function(loc) {
+                if (window.locations._byId[loc] != null) {
+                  return window.locations._byId[loc].trigger("select");
+                }
               });
             }
           });
@@ -183,7 +184,7 @@
   });
 
   $(function() {
-    var Locations, Movies, find, geocoder, models, parse, views;
+    var Locations, Movies, geocoder, models, views;
     views = window.views;
     models = window.models;
     String.prototype.sanitize = function() {
@@ -301,53 +302,8 @@
     window.locations = new Locations;
     window.map = new views.MovieMap;
     geocoder = new google.maps.Geocoder();
-    parse = function(current, addresses, id) {
-      var flag;
-      flag = false;
-      return _.each(addresses, function(addr, i) {
-        if (addr.formatted_address.toLowerCase().indexOf("san francisco") !== -1) {
-          console.log("for " + current + " with id " + id + "we have a SF");
-          console.log("at lat " + addr.geometry.location.lat());
-          console.log("at lng " + addr.geometry.location.lng());
-          return $.ajax({
-            url: '/newlocs/' + id + "/" + addr.geometry.location.lat() + "/" + addr.geometry.location.lng(),
-            type: 'POST',
-            dataType: 'json',
-            success: function(json) {
-              return console.log(json);
-            }
-          });
-        }
-      });
-    };
-    find = function(loc, index) {
-      var address;
-      if (loc == null) {
-        return;
-      }
-      loc = loc.toJSON();
-      address = loc.title;
-      if (loc.lng < -125 || loc.lng > -118 || loc.lat > 39 || loc.lat < 34) {
-        return window.setTimeout(function() {
-          return geocoder.geocode({
-            address: address
-          }, function(results, status) {
-            if (status === google.maps.GeocoderStatus.OK) {
-              parse(address, results, loc.title);
-            } else {
-              console.log(status);
-            }
-            return find(window.locations.at(index + 1), index + 1);
-          });
-        }, 1000);
-      } else {
-        return find(window.locations.at(index + 1), index + 1);
-      }
-    };
     return locations.fetch({
       success: function(locs) {
-        var loc;
-        loc = locs.at(0);
         window.map.collection = locs;
         return movies.fetch({
           success: function() {
