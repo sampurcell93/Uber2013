@@ -12,7 +12,7 @@
         this.infowindow = new google.maps.InfoWindow();
         this.mapOptions = {
           center: new google.maps.LatLng(37.7849300, -122.4294200),
-          zoom: 3,
+          zoom: 13,
           mapTypeId: google.maps.MapTypeId.ROADMAP
         };
         this.map = new google.maps.Map(document.getElementsByClassName("map-canvas")[0], this.mapOptions);
