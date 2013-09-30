@@ -33,8 +33,13 @@
   });
 
   app.get("/", function(req, res) {
-    return db.locations.find({}, function(err, found) {
-      return res.render("index");
+    return db.locations.find({}, function(err, locs) {
+      return db.movies.find({}, function(err, movies) {
+        return res.render("index", {
+          movies: JSON.stringify(movies),
+          locations: JSON.stringify(locs)
+        });
+      });
     });
   });
 

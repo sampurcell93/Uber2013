@@ -35,17 +35,6 @@ $ ->
             # setters for twitter typeahead
             @value = movie.title
             @tokens = [movie._id, movie.director, movie.producer, movie.writer, movie.title, movie.actor_1, movie.actor_2, movie.actor_3]
-        # Parses the JSON returned from Mongo
-        parse: (response) ->
-            self = @
-            links = new Locations
-            _.each response.locations, (id) ->
-                link = locations._byId[id]
-                if link?
-                    link.movies.add self
-                    links.add link
-            @["coords"] = links
-            response
 
     # Collection of movies, pulled from SODATA
     Movies = Backbone.Collection.extend
@@ -101,16 +90,13 @@ $ ->
             @
 
     window.FullViewer = new views.FullMovieOrLocation
-    window.movies = new Movies
-    window.locations = new Locations
+    window.movies = new Movies window.movies
+    window.locations = new Locations window.locations
     window.map = new views.MovieMap
+    window.map.collection = locations
+    window.map.render()
     geocoder = new google.maps.Geocoder()  
 
-    # fetch the locations, then the movies and link them
-    locations.fetch success: (locs) ->
-        window.map.collection = locs
-        movies.fetch success: ->
-            window.map.render()
 
             
 

@@ -298,20 +298,12 @@
       }
     });
     window.FullViewer = new views.FullMovieOrLocation;
-    window.movies = new Movies;
-    window.locations = new Locations;
+    window.movies = new Movies(window.movies);
+    window.locations = new Locations(window.locations);
     window.map = new views.MovieMap;
-    geocoder = new google.maps.Geocoder();
-    return locations.fetch({
-      success: function(locs) {
-        window.map.collection = locs;
-        return movies.fetch({
-          success: function() {
-            return window.map.render();
-          }
-        });
-      }
-    });
+    window.map.collection = locations;
+    window.map.render();
+    return geocoder = new google.maps.Geocoder();
   });
 
 }).call(this);

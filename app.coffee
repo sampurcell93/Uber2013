@@ -21,8 +21,9 @@ app.configure ->
 
 
 app.get "/", (req, res)->
-    db.locations.find {}, (err, found) ->
-        res.render "index"
+    db.locations.find {}, (err, locs) ->
+        db.movies.find {}, (err, movies) ->
+            res.render "index", {movies: JSON.stringify(movies), locations: JSON.stringify(locs)}
 
 app.get "/movies", (req, res) ->
     db.movies.find {}, (err, found) ->

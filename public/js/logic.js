@@ -34,21 +34,6 @@
         movie = this.toJSON();
         this.value = movie.title;
         return this.tokens = [movie._id, movie.director, movie.producer, movie.writer, movie.title, movie.actor_1, movie.actor_2, movie.actor_3];
-      },
-      parse: function(response) {
-        var links, self;
-        self = this;
-        links = new Locations;
-        _.each(response.locations, function(id) {
-          var link;
-          link = locations._byId[id];
-          if (link != null) {
-            link.movies.add(self);
-            return links.add(link);
-          }
-        });
-        this["coords"] = links;
-        return response;
       }
     });
     Movies = Backbone.Collection.extend({
@@ -115,20 +100,12 @@
       }
     });
     window.FullViewer = new views.FullMovieOrLocation;
-    window.movies = new Movies;
-    window.locations = new Locations;
+    window.movies = new Movies(window.movies);
+    window.locations = new Locations(window.locations);
     window.map = new views.MovieMap;
-    geocoder = new google.maps.Geocoder();
-    return locations.fetch({
-      success: function(locs) {
-        window.map.collection = locs;
-        return movies.fetch({
-          success: function() {
-            return window.map.render();
-          }
-        });
-      }
-    });
+    window.map.collection = locations;
+    window.map.render();
+    return geocoder = new google.maps.Geocoder();
   });
 
 }).call(this);
