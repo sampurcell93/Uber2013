@@ -31,38 +31,35 @@ $ ->
             @
         render: ->
             self = @
-            marker = new views.LocationMarker({model: @collection.first(), mapObj: self}).render().marker
-            marker.setMap @map
-            # _.each @collection.models, (location, i) ->
-            #     loc = location.toJSON()
-            #     # only plot points near SF - sometimes Google just cannot return good data.
-            #     unless loc.lng < -125  or loc.lng > -118 or loc.lat > 39 or loc.lat < 34
-            #         view = new views.LocationMarker({model: location, mapObj: self})
-            #         marker = view.render().marker
-            #         # Save a central reference to the marker
-            #         self.markers.push marker
-            #         cc marker
-            #         cc self.map
-            #         marker.setMap self.map
-            #         # Plot point
-            #         google.maps.event.addListener marker, "click", ->
-            #             window.app.navigate "/locations/" + loc._id, true
-            # @plotPoints(0)
+            # marker = new views.LocationMarker({model: @collection.first(), mapObj: self}).render().marker
+            # marker.setMap @map
+            _.each @collection.models, (location, i) ->
+                loc = location.toJSON()
+                # only plot points near SF - sometimes Google just cannot return good data.
+                unless loc.lng < -125  or loc.lng > -118 or loc.lat > 39 or loc.lat < 34
+                    view = new views.LocationMarker({model: location, mapObj: self})
+                    marker = view.render().marker
+                    # Save a central reference to the marker
+                    self.markers.push marker
+                    marker.setMap self.map
+                    # Plot point
+                    google.maps.event.addListener marker, "click", ->
+                        window.app.navigate "/locations/" + loc._id, true
+            @plotPoints(0)
             @bindAutoFill()
             @
         plotPoints: (index) ->
             self = @
             window.setTimeout ->
-                cc 
-                # if index < self.markers.length
-                #     self.markers[index].setMap self.map
-                #     self.plotPoints index + 1
-                #     progress = document.querySelector("progress")
-                #     progress.value = (index / self.markers.length) * 100
-                # else
-                #     $(document.body).removeClass().find(".modal").fadeOut("slow")
-                #     window.app = new WorkArea({locations: self.collection, map: self, movies: window.movies})
-                #     Backbone.history.start pushBack: true
+                if index < self.markers.length
+                    self.markers[index].setMap self.map
+                    self.plotPoints index + 1
+                    progress = document.querySelector("progress")
+                    progress.value = (index / self.markers.length) * 100
+                else
+                    $(document.body).removeClass().find(".modal").fadeOut("slow")
+                    window.app = new WorkArea({locations: self.collection, map: self, movies: window.movies})
+                    Backbone.history.start pushBack: true
             , 10
 
         bindAutoFill: ->

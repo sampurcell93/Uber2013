@@ -99,8 +99,8 @@
       }
     });
     window.FullViewer = new views.FullMovieOrLocation;
-    window.movies = new Movies(window.rawlocs);
-    window.locations = new Locations(window.rawmovs);
+    window.movies = new Movies(window.rawmovs);
+    window.locations = new Locations(window.rawlocs);
     window.map = new views.MovieMap({
       collection: locations
     });

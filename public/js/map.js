@@ -38,13 +38,25 @@
         return this;
       },
       render: function() {
-        var marker, self;
+        var self;
         self = this;
-        marker = new views.LocationMarker({
-          model: this.collection.first(),
-          mapObj: self
-        }).render().marker;
-        marker.setMap(this.map);
+        _.each(this.collection.models, function(location, i) {
+          var loc, marker, view;
+          loc = location.toJSON();
+          if (!(loc.lng < -125 || loc.lng > -118 || loc.lat > 39 || loc.lat < 34)) {
+            view = new views.LocationMarker({
+              model: location,
+              mapObj: self
+            });
+            marker = view.render().marker;
+            self.markers.push(marker);
+            marker.setMap(self.map);
+            return google.maps.event.addListener(marker, "click", function() {
+              return window.app.navigate("/locations/" + loc._id, true);
+            });
+          }
+        });
+        this.plotPoints(0);
         this.bindAutoFill();
         return this;
       },
@@ -52,7 +64,23 @@
         var self;
         self = this;
         return window.setTimeout(function() {
-          return cc;
+          var progress;
+          if (index < self.markers.length) {
+            self.markers[index].setMap(self.map);
+            self.plotPoints(index + 1);
+            progress = document.querySelector("progress");
+            return progress.value = (index / self.markers.length) * 100;
+          } else {
+            $(document.body).removeClass().find(".modal").fadeOut("slow");
+            window.app = new WorkArea({
+              locations: self.collection,
+              map: self,
+              movies: window.movies
+            });
+            return Backbone.history.start({
+              pushBack: true
+            });
+          }
         }, 10);
       },
       bindAutoFill: function() {
