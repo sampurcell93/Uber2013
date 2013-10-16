@@ -10,7 +10,7 @@ $ ->
 
     # The overall application controller.
     window.views.MovieMap = Backbone.View.extend
-        el: '.wrapper'
+        el: 'body'
         initialize: ->
             @infowindow = new google.maps.InfoWindow()
             @mapOptions = 
@@ -31,32 +31,38 @@ $ ->
             @
         render: ->
             self = @
-            _.each @collection.models, (location) ->
-                loc = location.toJSON()
-                # only plot points near SF - sometimes Google just cannot return good data.
-                unless loc.lng < -125  or loc.lng > -118 or loc.lat > 39 or loc.lat < 34
-                    view = new views.LocationMarker model: location, mapObj: self
-                    marker = view.render().marker
-                    # Save a central reference to the marker
-                    self.markers.push marker
-                    # Plot point
-                    google.maps.event.addListener marker, "click", ->
-                        window.app.navigate "/locations/" + loc._id, true
-            @plotPoints(0)
-            window.app = new WorkArea
-            Backbone.history.start pushBack: true
+            marker = new views.LocationMarker({model: @collection.first(), mapObj: self}).render().marker
+            marker.setMap @map
+            # _.each @collection.models, (location, i) ->
+            #     loc = location.toJSON()
+            #     # only plot points near SF - sometimes Google just cannot return good data.
+            #     unless loc.lng < -125  or loc.lng > -118 or loc.lat > 39 or loc.lat < 34
+            #         view = new views.LocationMarker({model: location, mapObj: self})
+            #         marker = view.render().marker
+            #         # Save a central reference to the marker
+            #         self.markers.push marker
+            #         cc marker
+            #         cc self.map
+            #         marker.setMap self.map
+            #         # Plot point
+            #         google.maps.event.addListener marker, "click", ->
+            #             window.app.navigate "/locations/" + loc._id, true
+            # @plotPoints(0)
             @bindAutoFill()
             @
         plotPoints: (index) ->
             self = @
             window.setTimeout ->
-                if index < self.markers.length
-                    self.markers[index].setMap self.map
-                    self.plotPoints index + 1
-                    progress = document.querySelector("progress")
-                    progress.value = (index / self.markers.length) * 100
-                else
-                    $(document.body).removeClass().find(".modal").fadeOut("slow")
+                cc 
+                # if index < self.markers.length
+                #     self.markers[index].setMap self.map
+                #     self.plotPoints index + 1
+                #     progress = document.querySelector("progress")
+                #     progress.value = (index / self.markers.length) * 100
+                # else
+                #     $(document.body).removeClass().find(".modal").fadeOut("slow")
+                #     window.app = new WorkArea({locations: self.collection, map: self, movies: window.movies})
+                #     Backbone.history.start pushBack: true
             , 10
 
         bindAutoFill: ->
@@ -112,30 +118,33 @@ $ ->
                         marker.setMap window.map.map
 
      WorkArea = Backbone.Router.extend
+        initialize: (attrs) ->
+            _.extend @, attrs
         routes: 
             'movies/:id': "movie"
             'locations/:id': 'location'
             'favorites': () ->
-                locs = _.filter window.locations.models, (loc) ->
+                locs = _.filter @locations.models, (loc) ->
                     typeof loc.get("favorite") isnt "undefined" and loc.get("favorite") is true
-                movs = _.filter window.movies.models, (mov) ->
+                movs = _.filter @movies.models, (mov) ->
                     typeof mov.get("favorite") isnt "undefined" and mov.get("favorite") is true
                 FullViewer.render "favtemplate", { locations: locs, movies: movs }
         movie: (id) ->
-            model = window.movies._byId[id]
+            cc @movies
+            model = @movies._byId[id]
             coords = model.get("coords")
-            if !window.movies? or !model? then return
+            if !@movies? or !model? then return
             FullViewer.render "movtemplate", model.toJSON()
-            window.map.unSelect().map.setZoom 12
+            @map.unSelect().map.setZoom 12
             _.each coords.models, (loc) ->
                 if loc.marker? 
-                    loc.marker.setMap window.map.map
+                    loc.marker.setMap @map.map
                     loc.marker.setIcon redIcon
             if coords.last()?
                 coords.last().trigger "zoomto"
         location: (id)->
-            model = window.locations._byId[id]
+            model = @locations._byId[id]
             FullViewer.render "loctemplate", {location: model.toJSON(), movies: model.movies.toJSON()}
-            window.map.unBlue()
+            @map.unBlue()
             model.trigger "zoomto"
             model.trigger "click"

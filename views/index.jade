@@ -12,23 +12,19 @@ html
             p.center.p20 We're grabbing the data for movies that have been filmed in San Francisco! This might take a second.
             progress(max='100')
             //- img(src='../images/loader.gif', alt='loader')
-        div.container.large.wrapper 
-            header
-                nav.columns.four
-                    ul
-                        li
-                            a(href='#favorites') Favorites
-                        li.new-movies New Movies
-                label.columns.six
-                    input(type='text', placeholder='Search for movies, people, and locations.').js-search
-                span.js-show-all-points.columns.two Show all points
-                .clear
-            .columns.nine.map-wrapper
-                .map-corners
-                    .map-canvas
-            .columns.three
-                .location-data
-                    h1.center.p10 Start looking for Movies!
+            //- nav.columns.four
+            //-     ul
+            //-         li
+            //-             a(href='#favorites') Favorites
+            //-         li.new-movies New Movies
+        .map-canvas
+        .sidebar
+            label.columns.six
+                input(type='text', placeholder='Search for movies, people, and locations.').js-search
+            span.js-show-all-points.columns.two Show all points
+            .clear
+            .location-data
+                h1.center.p10 Start looking for Movies!
 
         include templates
         script(type="text/javascript",src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBoS1bfOyPBTbYH1GhtD4xRs9XrT17nGwg&sensor=true")

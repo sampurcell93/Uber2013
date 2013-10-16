@@ -30,20 +30,10 @@
       },
       idAttribute: '_id',
       initialize: function() {
-        var coords, movie, self;
+        var movie;
         movie = this.toJSON();
-        self = this;
         this.value = movie.title;
-        this.tokens = [movie._id, movie.director, movie.producer, movie.writer, movie.title, movie.actor_1, movie.actor_2, movie.actor_3];
-        this.set("coords", coords = new Locations);
-        cc(coords);
-        return _.each(this.get("locations"), function(loc) {
-          loc = locations._byId[loc];
-          if (loc != null) {
-            loc.movies.add(self);
-            return coords.add(loc);
-          }
-        });
+        return this.tokens = [movie._id, movie.director, movie.producer, movie.writer, movie.title, movie.actor_1, movie.actor_2, movie.actor_3];
       }
     });
     Movies = Backbone.Collection.extend({
@@ -51,10 +41,10 @@
       model: models.Movie
     });
     window.views.LocationMarker = Backbone.View.extend({
-      initialize: function() {
+      initialize: function(attrs) {
         var self;
         _.bindAll(this, "render");
-        this.mapObj = this.options.mapObj;
+        this.mapObj = attrs.mapObj;
         self = this;
         return this.listenTo(this.model, {
           "hide": function() {
@@ -85,14 +75,14 @@
         });
       },
       render: function() {
-        var marker, pt;
+        var pt;
         pt = new google.maps.LatLng(this.model.get("lat"), this.model.get("lng"));
-        this.marker = marker = new google.maps.Marker({
+        this.marker = this.model.marker = new google.maps.Marker({
           position: pt,
           animation: google.maps.Animation.DROP,
-          title: this.model.get("title")
+          title: this.model.get("title"),
+          icon: redIcon
         });
-        this.model.marker = marker;
         return this;
       }
     });
@@ -109,8 +99,8 @@
       }
     });
     window.FullViewer = new views.FullMovieOrLocation;
-    window.locations = new Locations(window.rawlocs);
-    window.movies = new Movies(window.rawmovs);
+    window.movies = new Movies(window.rawlocs);
+    window.locations = new Locations(window.rawmovs);
     window.map = new views.MovieMap({
       collection: locations
     });

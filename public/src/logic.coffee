@@ -2,7 +2,6 @@ $ ->
     views = window.views
     models = window.models
 
-
     # remove quotes and apostrophes
     String.prototype.sanitize = ->
         @replace(/"/g, "").replace(/'/g, "")
@@ -33,26 +32,9 @@ $ ->
         idAttribute: '_id'
         initialize: ->
             movie = @toJSON()
-            self = @
             # setters for twitter typeahead
             @value = movie.title
-            @tokens = [
-                movie._id, 
-                movie.director,
-                movie.producer, 
-                movie.writer, 
-                movie.title, 
-                movie.actor_1, 
-                movie.actor_2, 
-                movie.actor_3
-            ]
-            @set "coords", coords = new Locations
-            cc coords
-            _.each @get("locations"), (loc) ->
-                loc = locations._byId[loc]
-                if loc?
-                     loc.movies.add self
-                     coords.add loc
+            @tokens = [movie._id, movie.director, movie.producer, movie.writer, movie.title, movie.actor_1, movie.actor_2, movie.actor_3]
 
     # Collection of movies, pulled from SODATA
     Movies = Backbone.Collection.extend
@@ -61,9 +43,9 @@ $ ->
 
     # The view for a marker
     window.views.LocationMarker = Backbone.View.extend
-        initialize: ->
+        initialize: (attrs) ->
             _.bindAll @, "render"
-            @mapObj = @options.mapObj
+            @mapObj = attrs.mapObj
             self = @
             @listenTo @model,
                 "hide": ->
@@ -86,13 +68,12 @@ $ ->
             # Make the google maps coordinate
             pt = new google.maps.LatLng @model.get("lat"), @model.get("lng")
             # Set a marker to point to it
-            @marker = marker = new google.maps.Marker(
+            @marker = @model.marker = new google.maps.Marker(
                 position: pt
                 animation: google.maps.Animation.DROP
                 title: @model.get "title"
-                # icon: redIcon
+                icon: redIcon
             )
-            @model.marker = marker
             @
     # View for rendering a full view - just pass template name and obj
     window.views.FullMovieOrLocation = Backbone.View.extend
@@ -108,9 +89,9 @@ $ ->
             @
 
     window.FullViewer = new views.FullMovieOrLocation
-    window.locations = new Locations window.rawlocs
-    window.movies = new Movies window.rawmovs
-    window.map = new views.MovieMap({collection: locations})
+    window.movies = new Movies window.rawlocs
+    window.locations = new Locations window.rawmovs
+    window.map = new views.MovieMap collection: locations
     window.map.render()
 
 

@@ -16,7 +16,7 @@ script(type='text/template')#full-view-location
 
 //-  Template for a full view of a movie, including all of the locations at which it was filmed
 script(type='text/template')#full-view-movie
-    <% var fav = (favorite == true) %>
+    <% var fav = (typeof favorite !== "undefined" && favorite == true) %>
     <a class='fav button icon-star<%= fav ? "-2" : ""%>' data-type='movies' data-id='<%= _id %>'> <%= fav ? "Unfavorite" : "Favorite" %> </a>
     .clear
     <% var u = "undefined"; %>

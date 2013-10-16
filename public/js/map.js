@@ -12,7 +12,7 @@
       });
     };
     window.views.MovieMap = Backbone.View.extend({
-      el: '.wrapper',
+      el: 'body',
       initialize: function() {
         this.infowindow = new google.maps.InfoWindow();
         this.mapOptions = {
@@ -38,28 +38,13 @@
         return this;
       },
       render: function() {
-        var self;
+        var marker, self;
         self = this;
-        _.each(this.collection.models, function(location) {
-          var loc, marker, view;
-          loc = location.toJSON();
-          if (!(loc.lng < -125 || loc.lng > -118 || loc.lat > 39 || loc.lat < 34)) {
-            view = new views.LocationMarker({
-              model: location,
-              mapObj: self
-            });
-            marker = view.render().marker;
-            self.markers.push(marker);
-            return google.maps.event.addListener(marker, "click", function() {
-              return window.app.navigate("/locations/" + loc._id, true);
-            });
-          }
-        });
-        this.plotPoints(0);
-        window.app = new WorkArea;
-        Backbone.history.start({
-          pushBack: true
-        });
+        marker = new views.LocationMarker({
+          model: this.collection.first(),
+          mapObj: self
+        }).render().marker;
+        marker.setMap(this.map);
         this.bindAutoFill();
         return this;
       },
@@ -67,15 +52,7 @@
         var self;
         self = this;
         return window.setTimeout(function() {
-          var progress;
-          if (index < self.markers.length) {
-            self.markers[index].setMap(self.map);
-            self.plotPoints(index + 1);
-            progress = document.querySelector("progress");
-            return progress.value = (index / self.markers.length) * 100;
-          } else {
-            return $(document.body).removeClass().find(".modal").fadeOut("slow");
-          }
+          return cc;
         }, 10);
       },
       bindAutoFill: function() {
@@ -151,15 +128,18 @@
       }
     });
     return WorkArea = Backbone.Router.extend({
+      initialize: function(attrs) {
+        return _.extend(this, attrs);
+      },
       routes: {
         'movies/:id': "movie",
         'locations/:id': 'location',
         'favorites': function() {
           var locs, movs;
-          locs = _.filter(window.locations.models, function(loc) {
+          locs = _.filter(this.locations.models, function(loc) {
             return typeof loc.get("favorite") !== "undefined" && loc.get("favorite") === true;
           });
-          movs = _.filter(window.movies.models, function(mov) {
+          movs = _.filter(this.movies.models, function(mov) {
             return typeof mov.get("favorite") !== "undefined" && mov.get("favorite") === true;
           });
           return FullViewer.render("favtemplate", {
@@ -170,16 +150,17 @@
       },
       movie: function(id) {
         var coords, model;
-        model = window.movies._byId[id];
+        cc(this.movies);
+        model = this.movies._byId[id];
         coords = model.get("coords");
-        if ((window.movies == null) || (model == null)) {
+        if ((this.movies == null) || (model == null)) {
           return;
         }
         FullViewer.render("movtemplate", model.toJSON());
-        window.map.unSelect().map.setZoom(12);
+        this.map.unSelect().map.setZoom(12);
         _.each(coords.models, function(loc) {
           if (loc.marker != null) {
-            loc.marker.setMap(window.map.map);
+            loc.marker.setMap(this.map.map);
             return loc.marker.setIcon(redIcon);
           }
         });
@@ -189,12 +170,12 @@
       },
       location: function(id) {
         var model;
-        model = window.locations._byId[id];
+        model = this.locations._byId[id];
         FullViewer.render("loctemplate", {
           location: model.toJSON(),
           movies: model.movies.toJSON()
         });
-        window.map.unBlue();
+        this.map.unBlue();
         model.trigger("zoomto");
         return model.trigger("click");
       }
