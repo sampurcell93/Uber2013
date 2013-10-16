@@ -2,6 +2,7 @@ $ ->
     views = window.views
     models = window.models
 
+
     # remove quotes and apostrophes
     String.prototype.sanitize = ->
         @replace(/"/g, "").replace(/'/g, "")
@@ -32,9 +33,26 @@ $ ->
         idAttribute: '_id'
         initialize: ->
             movie = @toJSON()
+            self = @
             # setters for twitter typeahead
             @value = movie.title
-            @tokens = [movie._id, movie.director, movie.producer, movie.writer, movie.title, movie.actor_1, movie.actor_2, movie.actor_3]
+            @tokens = [
+                movie._id, 
+                movie.director,
+                movie.producer, 
+                movie.writer, 
+                movie.title, 
+                movie.actor_1, 
+                movie.actor_2, 
+                movie.actor_3
+            ]
+            @set "coords", coords = new Locations
+            cc coords
+            _.each @get("locations"), (loc) ->
+                loc = locations._byId[loc]
+                if loc?
+                     loc.movies.add self
+                     coords.add loc
 
     # Collection of movies, pulled from SODATA
     Movies = Backbone.Collection.extend
@@ -72,7 +90,7 @@ $ ->
                 position: pt
                 animation: google.maps.Animation.DROP
                 title: @model.get "title"
-                icon: redIcon
+                # icon: redIcon
             )
             @model.marker = marker
             @
@@ -90,12 +108,10 @@ $ ->
             @
 
     window.FullViewer = new views.FullMovieOrLocation
-    window.movies = new Movies window.movies
-    window.locations = new Locations window.locations
-    window.map = new views.MovieMap
-    window.map.collection = locations
+    window.locations = new Locations window.rawlocs
+    window.movies = new Movies window.rawmovs
+    window.map = new views.MovieMap({collection: locations})
     window.map.render()
-    geocoder = new google.maps.Geocoder()  
 
 
             

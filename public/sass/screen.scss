@@ -102,13 +102,13 @@ p {
 a { color: #333; }
 a:hover { color: $mainhover; }
 
-.twitter-typeahead {
-    width: 100%; 
-}
-
 .js-show-all-points {
     cursor: pointer;
     line-height: 60px;
+}
+
+.twitter-typeahead {
+    width: 100%; 
 }
 
 .tt-dropdown-menu {
@@ -139,6 +139,8 @@ a:hover { color: $mainhover; }
         white-space: nowrap;
         text-overflow: ellipsis;
         margin: 0 10px;
+
+        &.tt-is-under-cursor { background: #eee; }
 
         &:first-of-type {
             border-top: none;
@@ -288,3 +290,15 @@ a:hover { color: $mainhover; }
         cursor: pointer;
         padding: 5px 7px;
 }
+
+progress {
+    width: 400px;
+    display: block;
+    margin: 10px auto;
+}
+
+progress::-webkit-progress-value {  
+}  
+progress::-moz-progress-bar {  
+    /* style rules */  
+}  

@@ -6,17 +6,22 @@
     window.views = {};
     window.blueIcon = "../images/bluepoi.png";
     window.redIcon = "../images/redpoi.png";
+    window.cc = function() {
+      return _.each(arguments, function(arg) {
+        return console.log(arg);
+      });
+    };
     window.views.MovieMap = Backbone.View.extend({
       el: '.wrapper',
       initialize: function() {
         this.infowindow = new google.maps.InfoWindow();
         this.mapOptions = {
           center: new google.maps.LatLng(37.7849300, -122.4294200),
-          zoom: 3,
+          zoom: 12,
           mapTypeId: google.maps.MapTypeId.ROADMAP
         };
         this.map = new google.maps.Map(document.getElementsByClassName("map-canvas")[0], this.mapOptions);
-        _.bindAll(this, "render");
+        _.bindAll(this, "render", "unBlue", "unSelect", "bindAutoFill");
         this.markers = [];
         return this;
       },
@@ -45,19 +50,33 @@
             });
             marker = view.render().marker;
             self.markers.push(marker);
-            marker.setMap(self.map);
             return google.maps.event.addListener(marker, "click", function() {
               return window.app.navigate("/locations/" + loc._id, true);
             });
           }
         });
-        $(document.body).removeClass().find(".modal").fadeOut("slow");
+        this.plotPoints(0);
         window.app = new WorkArea;
         Backbone.history.start({
           pushBack: true
         });
         this.bindAutoFill();
         return this;
+      },
+      plotPoints: function(index) {
+        var self;
+        self = this;
+        return window.setTimeout(function() {
+          var progress;
+          if (index < self.markers.length) {
+            self.markers[index].setMap(self.map);
+            self.plotPoints(index + 1);
+            progress = document.querySelector("progress");
+            return progress.value = (index / self.markers.length) * 100;
+          } else {
+            return $(document.body).removeClass().find(".modal").fadeOut("slow");
+          }
+        }, 10);
       },
       bindAutoFill: function() {
         var Underscore;
@@ -150,23 +169,22 @@
         }
       },
       movie: function(id) {
-        var item, model;
-        if (window.movies == null) {
+        var coords, model;
+        model = window.movies._byId[id];
+        coords = model.get("coords");
+        if ((window.movies == null) || (model == null)) {
           return;
         }
-        model = window.movies._byId[id];
-        item = model.toJSON();
-        item.coords = model.coords;
-        FullViewer.render("movtemplate", item);
+        FullViewer.render("movtemplate", model.toJSON());
         window.map.unSelect().map.setZoom(12);
-        _.each(model.coords.models, function(loc) {
+        _.each(coords.models, function(loc) {
           if (loc.marker != null) {
             loc.marker.setMap(window.map.map);
             return loc.marker.setIcon(redIcon);
           }
         });
-        if (model.coords.last() != null) {
-          return model.coords.last().trigger("zoomto");
+        if (coords.last() != null) {
+          return coords.last().trigger("zoomto");
         }
       },
       location: function(id) {

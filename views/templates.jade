@@ -19,7 +19,6 @@ script(type='text/template')#full-view-movie
     <% var fav = (favorite == true) %>
     <a class='fav button icon-star<%= fav ? "-2" : ""%>' data-type='movies' data-id='<%= _id %>'> <%= fav ? "Unfavorite" : "Favorite" %> </a>
     .clear
-    <%     String.prototype.sanitize = function() { return this.replace(/"/g, "").replace(/'/g, ""); }; %>
     <% var u = "undefined"; %>
     h1 <%= title %>
         span.small-year <%= " (" + release_year + ")" %> </a>
@@ -39,6 +38,7 @@ script(type='text/template')#full-view-movie
 
 //-  A template for displaying all location and movie favorites
 script(type='text/template')#faves-template
+    <% String.prototype.sanitize = function() { return this.replace(/"/g, "").replace(/'/g, ""); }; %>
     h2 Favorite Locations
     ul.pertinent-list
         <% _.each( locations, function (fav) { %>

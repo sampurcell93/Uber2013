@@ -4,6 +4,9 @@ $ ->
     window.views = {}
     window.blueIcon = "../images/bluepoi.png"
     window.redIcon = "../images/redpoi.png"
+    window.cc = ->
+        _.each arguments, (arg) ->
+            console.log arg
 
     # The overall application controller.
     window.views.MovieMap = Backbone.View.extend
@@ -12,10 +15,10 @@ $ ->
             @infowindow = new google.maps.InfoWindow()
             @mapOptions = 
               center: new google.maps.LatLng(37.7849300 , -122.4294200)
-              zoom: 3
+              zoom: 12
               mapTypeId: google.maps.MapTypeId.ROADMAP
-            @map = new google.maps.Map(document.getElementsByClassName("map-canvas")[0],@mapOptions);
-            _.bindAll @, "render"
+            @map = new google.maps.Map document.getElementsByClassName("map-canvas")[0],@mapOptions
+            _.bindAll @, "render", "unBlue", "unSelect", "bindAutoFill"
             @markers = []
             @
         unSelect: ->
@@ -37,15 +40,25 @@ $ ->
                     # Save a central reference to the marker
                     self.markers.push marker
                     # Plot point
-                    marker.setMap self.map
                     google.maps.event.addListener marker, "click", ->
                         window.app.navigate "/locations/" + loc._id, true
-
-            $(document.body).removeClass().find(".modal").fadeOut("slow")
+            @plotPoints(0)
             window.app = new WorkArea
             Backbone.history.start pushBack: true
             @bindAutoFill()
             @
+        plotPoints: (index) ->
+            self = @
+            window.setTimeout ->
+                if index < self.markers.length
+                    self.markers[index].setMap self.map
+                    self.plotPoints index + 1
+                    progress = document.querySelector("progress")
+                    progress.value = (index / self.markers.length) * 100
+                else
+                    $(document.body).removeClass().find(".modal").fadeOut("slow")
+            , 10
+
         bindAutoFill: ->
             Underscore = 
                 compile: (template) ->
@@ -109,18 +122,17 @@ $ ->
                     typeof mov.get("favorite") isnt "undefined" and mov.get("favorite") is true
                 FullViewer.render "favtemplate", { locations: locs, movies: movs }
         movie: (id) ->
-            if !window.movies? then return
             model = window.movies._byId[id]
-            item = model.toJSON()
-            item.coords = model.coords
-            FullViewer.render "movtemplate", item
+            coords = model.get("coords")
+            if !window.movies? or !model? then return
+            FullViewer.render "movtemplate", model.toJSON()
             window.map.unSelect().map.setZoom 12
-            _.each model.coords.models, (loc) ->
+            _.each coords.models, (loc) ->
                 if loc.marker? 
                     loc.marker.setMap window.map.map
                     loc.marker.setIcon redIcon
-            if model.coords.last()?
-                model.coords.last().trigger "zoomto"
+            if coords.last()?
+                coords.last().trigger "zoomto"
         location: (id)->
             model = window.locations._byId[id]
             FullViewer.render "loctemplate", {location: model.toJSON(), movies: model.movies.toJSON()}

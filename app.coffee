@@ -23,6 +23,7 @@ app.configure ->
 app.get "/", (req, res)->
     db.locations.find {}, (err, locs) ->
         db.movies.find {}, (err, movies) ->
+            # Pass in all raw data
             res.render "index", {movies: JSON.stringify(movies), locations: JSON.stringify(locs)}
 
 app.get "/movies", (req, res) ->
