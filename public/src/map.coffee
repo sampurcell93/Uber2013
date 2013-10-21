@@ -20,6 +20,8 @@ $ ->
             @map = new google.maps.Map document.getElementsByClassName("map-canvas")[0],@mapOptions
             _.bindAll @, "render", "unBlue", "unSelect", "bindAutoFill"
             @markers = []
+            window.app = new WorkArea({locations: @collection, map: @, movies: window.movies})
+            Backbone.history.start pushBack: true
             @
         unSelect: ->
             _.each @markers, (marker) ->
@@ -51,15 +53,13 @@ $ ->
         plotPoints: (index) ->
             self = @
             window.setTimeout ->
-                if index < self.markers.length
+                if index < self.markers.length / 10
                     self.markers[index].setMap self.map
                     self.plotPoints index + 1
                     progress = document.querySelector("progress")
                     progress.value = (index / self.markers.length) * 100
                 else
                     $(document.body).removeClass().find(".modal").fadeOut("slow")
-                    window.app = new WorkArea({locations: self.collection, map: self, movies: window.movies})
-                    Backbone.history.start pushBack: true
             , 10
 
         bindAutoFill: ->
@@ -75,7 +75,7 @@ $ ->
                     header: '<h2><i class="icon-film"></i> Movies:</h2>'
                     template: $("#movie-auto-item").html()
                     engine: Underscore
-                    limit: 15
+                    limit: 1000
                 },
                 {
                     name: 'locations'
@@ -83,7 +83,7 @@ $ ->
                     header: '<h2><i class="icon-compass-2"></i> Locations:</h2>'
                     template: $("#location-auto-item").html()
                     engine: Underscore
-                    limit: 15
+                    limit: 1000
                 }
                 ])
             @
@@ -107,12 +107,13 @@ $ ->
                 model.set "favorite", !model.get("favorite")
                 model.save()
                 e.stopPropagation()
-                e.stopimmediatePropagation()
                 e.preventDefault()
             "click .js-show-all-points": ->
                 _.each @markers, (marker) ->
                     if marker.getMap() is null
                         marker.setMap window.map.map
+            "click li[href]": (e) ->
+                window.app.navigate $(e.currentTarget).attr("href"), true
 
      WorkArea = Backbone.Router.extend
         initialize: (attrs) ->

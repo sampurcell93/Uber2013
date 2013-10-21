@@ -115,3 +115,15 @@ body {
 .w10 { width: 100%; }
 .icon { font-family: 'icons'; }
 .white { color: #fff; }
+.clearfix {
+    zoom:1;
+    &:before, &:after {
+        content: "\0020";
+        display: block;
+        height: 0;
+        overflow: hidden;
+    }
+    &:after {
+        clear: both;
+    }
+}

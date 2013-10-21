@@ -32,8 +32,22 @@
       initialize: function() {
         var movie;
         movie = this.toJSON();
+        this.parse(movie);
         this.value = movie.title;
-        return this.tokens = [movie._id, movie.director, movie.producer, movie.writer, movie.title, movie.actor_1, movie.actor_2, movie.actor_3];
+        return this.tokens = [movie._id, movie.title];
+      },
+      parse: function(obj) {
+        var self;
+        self = this;
+        this.set("coords", new Locations);
+        _.each(obj.locations, function(loc) {
+          loc = window.locations._byId[loc];
+          if (loc != null) {
+            loc.movies.push(self);
+            return self.get("coords").push(loc);
+          }
+        });
+        return this;
       }
     });
     Movies = Backbone.Collection.extend({
@@ -99,8 +113,8 @@
       }
     });
     window.FullViewer = new views.FullMovieOrLocation;
-    window.movies = new Movies(window.rawmovs);
     window.locations = new Locations(window.rawlocs);
+    window.movies = new Movies(window.rawmovs);
     window.map = new views.MovieMap({
       collection: locations
     });

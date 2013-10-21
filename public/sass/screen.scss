@@ -29,23 +29,6 @@ header {
         padding: 10px;
         position: relative;
     }
-
-
-    .icon-search { 
-        display: none;
-        line-height: 35px;
-        vertical-align: 1px;
-        padding: 0 5px;
-        font-size: 1.3em;
-        color: $mainwhite;
-        cursor: pointer;
-        text-shadow: 0px -1px 0px black;
-
-        &:hover {
-            color: #fff;
-            text-shadow: 0px -1px 1px #fff;
-        }
-    }
 }
 
 h1 {
@@ -62,9 +45,6 @@ h2 {
     padding-bottom: 5px;
 }
 
-.small-year {
-    font-size: .7em;
-}
 
 p {
     line-height: 1.6;
@@ -77,13 +57,9 @@ p {
 a { color: #333; }
 a:hover { color: $mainhover; }
 
-.js-show-all-points {
-    cursor: pointer;
-    line-height: 60px;
-}
-
 .twitter-typeahead {
-    width: 100%; 
+    width: 97%; 
+    margin: 4px auto;
 }
 
 .tt-dropdown-menu {
@@ -91,12 +67,15 @@ a:hover { color: $mainhover; }
     z-index: 999999;
     left: 11px;
     background: $mainwhite;
-    background: rgba(255,255,255,.85);
+    background: rgba(255,255,255,.95);
     max-height: 500px;
     @include border-radius(0 0 3px 3px);
     @include box-shadow(0px 2px 6px #777);
-    padding-bottom: 30px;
     width: 100%;
+    font-size: .8rem;
+    color: #333;
+
+    &:hover { text-shadow: none;}
 
     .tt-suggestions {
         max-height:180px;
@@ -105,8 +84,6 @@ a:hover { color: $mainhover; }
 
     .tt-suggestion {
         line-height: 30px;
-        text-indent: 20px;
-        font-size: 1.1em;
         border-top: 1px solid #fff;
         border-bottom: 1px solid #ccc;
         cursor: pointer;
@@ -114,8 +91,10 @@ a:hover { color: $mainhover; }
         white-space: nowrap;
         text-overflow: ellipsis;
         margin: 0 10px;
+        font-size: 1.2em;
+        text-align: left;
 
-        &.tt-is-under-cursor { background: #eee; }
+        &.tt-is-under-cursor { background: #fff; color: #000;  }
 
         &:first-of-type {
             border-top: none;
@@ -125,8 +104,8 @@ a:hover { color: $mainhover; }
         }
 
         a {
-            color: #222 !important;
-            text-decoration: none !important;
+            color: #222;
+            text-decoration: none;
             display: inline-block;
             width: 80%;
         }
@@ -146,11 +125,15 @@ a:hover { color: $mainhover; }
         }
     }
     h2 {    
-        background: #eee;
+        text-align: left;
         margin-top: 0;
         margin-bottom: 0;
         border-top: 1px solid #ccc;
         @include  box-shadow(0px 0px 2px inset #fff);
+        background-color: rgb(69,72,77); // Old browsers
+        @include filter-gradient(#45484d, #000000, vertical); // IE6-9
+        @include background-image(linear-gradient(top,  rgba(69,72,77,1) 0%,rgba(0,0,0,1) 100%));
+        color: #fff;
 
         i {
             padding: 0px 10px;
@@ -164,25 +147,12 @@ a:hover { color: $mainhover; }
 }   
 
 .pertinent-list {
-
-    &.people { 
-        color: #555;
-
-        li {
-            line-height: 1.4;
-            border-bottom: 1px solid #bbb;
-        }
-    }
-
     li {
-
-        border-bottom: 1px solid #bbb;
-        border-top: 1px solid #eee;
+        line-height: 1.4em;
 
         a {
             color: #333;
             text-decoration: none;
-            padding: 4px;
             display: block;
 
             &:hover {
@@ -196,6 +166,52 @@ a:hover { color: $mainhover; }
         &:first-of-type { border-top: none;}
         &:last-of-type { border-bottom: none;}
     }   
+}
+
+.controls {
+    @extend .clearfix;
+    // needs latest Compass, add '@import "compass"' to your scss
+    background-color: rgb(69,72,77); // Old browsers
+    @include filter-gradient(#45484d, #000000, vertical); // IE6-9
+    @include background-image(linear-gradient(top,  rgba(69,72,77,1) 0%,rgba(0,0,0,1) 100%));
+    white-space: nowrap;
+    border-bottom: 1px solid #fff;
+
+    > li {
+        float: left;
+        height: 55px;
+        text-align: center;
+        width: 33%;
+        line-height: 37px;
+        cursor: pointer;
+        position: relative;
+        color: #2cafe3;
+        font-size: 1.27em;
+        text-shadow: none;
+        border-left: 1px solid #555;
+        border-right: 1px solid #000;
+
+        &.search-bar {
+            width: 100%;
+            height: auto;
+            border-top: 1px solid #666;
+        }
+
+        &:hover { 
+            color: #49c0f0;
+//            text-shadow: 0px 0px 3px #fff;
+            @include box-shadow(0px 0px 20px #111 inset);
+        }
+        &:after {
+            content: attr(title);
+            display: block;
+            color: #fff;
+            position: absolute;
+            bottom: -7px;
+            width: 100%;
+            font-size: .6em;
+        }
+    }
 }
 
 
@@ -212,12 +228,9 @@ a:hover { color: $mainhover; }
 
 
 input {
-    font-size: 1.2em;
-    border: 1px solid transparent;
-    background: $mainwhite;
-    background: rgba(255,255,255,.81);
-    line-height: 38px;
-    padding: 0 7px;
+    font-size: .8em;
+    border: none;
+    padding: 9px 7px;
     outline: none;
     width: 100%;
     @include box-shadow(0px 0px 2px #444 inset);
@@ -243,21 +256,31 @@ input {
     overflow: auto;
     position: relative;
     padding: 10px;
+}
 
-    .button {
-        margin-top: -13px;
+button {
+
+        @include border-radius(3px);
+        @include box-shadow(0px 0px 1px #fff inset);
+        background: #ddd;
+        border: 1px solid #bbb;
+        position: relative;
+        cursor: pointer;
+        padding: 5px 7px;
         display:block;
-        float: right;
+        margin: 10px auto;
         font-size: .9em;
-        color: #444;
         text-decoration: none;
+        text-align: center;
+        color: #333;
+        width: 100%;
         
         &.icon-star-2 {
-            border-color: #6FC462;
+            border-color: #2cafe3;
         }
 
         &.icon-star-2:before {
-            color: #6FC462;
+            color: #2cafe3;
         }
 
         &:before {
@@ -265,22 +288,12 @@ input {
         }
 
         &:hover {
-            background: #fff;
+            background: #bbb;
         }
 
         &:active {
-            background: #eee;
+            background: #aaa;
         }
-    }
-}
-
-.button {
-        @include border-radius(3px);
-        background: $mainwhite; 
-        border: 1px solid #bbb;
-        position: relative;
-        cursor: pointer;
-        padding: 5px 7px;
 }
 
 progress {

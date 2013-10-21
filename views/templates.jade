@@ -1,8 +1,7 @@
 
 //- Template for a full view of a location, including the movies filmed there
 script(type='text/template')#full-view-location
-    <% var fav = (location.favorite == true); %>
-    <a class='fav button icon-star<%= fav ? "-2" : ""%>' data-type='locations' data-id='<%= location._id %>'> <%= fav ? "Unfavorite" : "Favorite" %> </a>
+    <% var fav = (typeof location.favorite !== "undefined" && location.favorite == true); %>
     .clear
     <% var u = "undefined"; %>
     h1 <%= location.title %>
@@ -13,15 +12,15 @@ script(type='text/template')#full-view-location
         li <a href='#movies/<%= movie._id %>'><%= movie.title %>
             span.small-year <%= " (" + movie.release_year + ")" %> </a>
         <% }) %>
+    <button class='fav icon-star<%= fav ? "-2" : ""%>' data-type='locations' data-id='<%= location._id %>'> <%= fav ? "Unfavorite" : "Favorite" %> </button>
 
 //-  Template for a full view of a movie, including all of the locations at which it was filmed
 script(type='text/template')#full-view-movie
     <% var fav = (typeof favorite !== "undefined" && favorite == true) %>
-    <a class='fav button icon-star<%= fav ? "-2" : ""%>' data-type='movies' data-id='<%= _id %>'> <%= fav ? "Unfavorite" : "Favorite" %> </a>
     .clear
     <% var u = "undefined"; %>
     h1 <%= title %>
-        span.small-year <%= " (" + release_year + ")" %> </a>
+        span.s7 <%= " (" + release_year + ")" %> </a>
     ul.pertinent-list.people
         li Starring: <%= typeof actor_1 !== u ? actor_1 + ", " : "" %>
             <%= typeof actor_2 !== u ? actor_2 + ", ": "" %>
@@ -34,7 +33,7 @@ script(type='text/template')#full-view-movie
         <% _.each(coords.models, function(loc) { %>
         li <a  href='#locations/<%= loc.get("_id").sanitize() %>'><%= loc.get("title") %></a>
         <% }) %>
-    <ul class='actions-list' data-id='<%= _id %>'>
+    <button class='fav icon-star<%= fav ? "-2" : ""%>' data-type='movies' data-id='<%= _id %>'> <%= fav ? "Unfavorite" : "Favorite" %> </button>
 
 //-  A template for displaying all location and movie favorites
 script(type='text/template')#faves-template

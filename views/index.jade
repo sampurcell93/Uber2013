@@ -11,18 +11,19 @@ html
         .modal
             p.center.p20 We're grabbing the data for movies that have been filmed in San Francisco! This might take a second.
             progress(max='100')
-            //- img(src='../images/loader.gif', alt='loader')
             //- nav.columns.four
             //-     ul
-            //-         li
-            //-             a(href='#favorites') Favorites
-            //-         li.new-movies New Movies
+                    li
+                        a(href='#favorites') Favorites
+                    li.new-movies New Movies
         .map-canvas
         .sidebar
-            label.columns.six
-                input(type='text', placeholder='Search for movies, people, and locations.').js-search
-            span.js-show-all-points.columns.two Show all points
-            .clear
+            ul.controls
+                li.icon-monitor.js-show-all-points(title='Show All')
+                li.icon-star-2(title='Favorites', href='favorites')
+                li.new-movies.icon-film(title='New Movies')
+                li.search-bar
+                    input(type='text', placeholder='Search for movies, people, and locations.').js-search
             .location-data
                 h1.center.p10 Start looking for Movies!
 
